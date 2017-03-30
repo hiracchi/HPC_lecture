@@ -1,6 +1,6 @@
 % 実践的シミュレーションソフトウェアの開発演習(HPC基礎)
 % 平野 敏行
-% 2016/04/14
+% 2017/04/13
 
 # はじめに
 
@@ -38,7 +38,7 @@
     - 行列Cを指定されたフォーマットでファイルに出力する。
 
 - 最新情報・ヒントはwikiを参照すること
-    - https://bitbucket.org/fumitoshi_sato/2016lecture/wiki/基礎演習課題(行列積)について
+    - https://bitbucket.org/fumitoshi_sato/2017lecture/wiki/基礎演習課題(行列積)について
 
 ***
 ## 注意事項
@@ -75,21 +75,24 @@
     - 非常に高価
     - 最近の流行は分散並列型
 
-## FX10システム概略
+## Reedbush-Uシステム概略
 
-- http://www.cc.u-tokyo.ac.jp/system/fx10/fx10_intro.html
+- http://www.cc.u-tokyo.ac.jp/system/reedbush/reedbush_intro.html
 
-![FX10](./fx10_intro.png)
+![Reedbush-U](./reedbush_intro.png)
 
 
 ## Top500 (http://top500.org/) (1/2)
 
-![TOP500-poster1](./TOP500_201511_Poster-1.png)
+    - Rpeak: 実効性能値
+    - Rmax: 理論性能値
+
+![TOP500-poster1](./TOP500_201611_1.pdf)
 
 
 ## Top500 (2/2)
 
-![TOP500-poster2](./TOP500_201511_Poster-2.png)
+![TOP500-poster2](./TOP500_201611_2.pdf)
 
 
 # HPCプログラミング
@@ -106,19 +109,37 @@
     - 例えば iMac (Intel Core i5 2.8 GHz Quad-core)
         - 2.8 GHz x 4 core x 16 op = 179.2 GFLOPS
 
+- 浮動小数点数
+    - コンピュータの数値表現
+        - 主に IEEE 754 方式
+    - 種類
+    
+|        | 情報量 (bit)                                         |備考                        |
+|:-------|:-----------------------------------------------------|:---------------------------|
+| 単精度 | 符号部 1 + 指数部  8 + 仮数部  23 =  32 (=  4 octet) |Single Precision; SP; float |
+| 倍精度 | 符号部 1 + 指数部 11 + 仮数部  52 =  64 (=  8 octet) |Double Precision; DP; double|
+| 4倍精度| 符号部 1 + 指数部 15 + 仮数部 112 = 128 (= 16 octet) |Quad Presicion              |
+| 半精度 | 符号部 1 + 指数部  5 + 仮数部  10 =  16 (=  2 octet) |half                        |
+
+
 ***
 - 様々なCPUのクロックあたりの浮動小数点演算数
+    - SSE: ストリーミングSIMD拡張命令(Streaming SIMD Extensions)
+        - SIMD: single instruction multiple data
+    - FMA: 積和演算(fused multiply-add)
 
-|CPU                    |              |備考|
-|:----------------------|-------------:|----|
-|Core2 Duo              | 4 FLOPS/Clock|SSE |
-|Core2 Quad             | 4 FLOPS/Clock|SSE |
-|Core i7(Nehalem)       | 4 FLOPS/Clock|SSE |
-|Core i7(SandyBridge)   | 8 FLOPS/Clock|AVX |
-|Core i7(Haswell ~)     |16 FLOPS/Clock|AVX2|
-|AMD Opteron(Magny-Cours| 4 FLOPS/Clock|    |
-|AMD FX(Bulldozer)      | 8 FLOPS/Clock|    |
+|CPU                                                   |                 |備考                                  |
+|:-----------------------------------------------------|----------------:|--------------------------------------|
+|Intel Core2, Nehalem                                  | 4 DP FLOPS/Clock|2-wide SSE2(加法) + 2-wide SSE2(乗法) |
+|Intel Sandy Bridge/Ivy Bridge                         | 8 DP FLOPS/Clock|4-wide FMA                            |
+|Intel Haswell/Broadwell/Skylake/Kaby Lake             |16 DP FLOPS/Clock|4-wide FMA x 2                        |
+|AMD Opteron(K10)                                      | 4 DP FLOPS/Clock|2-wide SSE2(加法) + 2-wide SSE2(乗法) |
+|AMD FX(Bulldozer)                                     | 8 DP FLOPS/Clock|4-wide FMA                            |
+|AMD Ryzen                                             | 8 DP FLOPs/cycle|4-wide FMA                            |
+|Intel Xeon Phi (Knights Landing)                      |32 DP FLOPs/Clock|8-wide FMA x 2                        |
 
+
+  
 ***
 - 様々なハードの浮動小数点演算能力
 
@@ -391,7 +412,7 @@ $$
 
 ```
 #include <mpi.h>
-int MPI_Init(int *argc, char ***argv);
+int MPI_Init(int *argc, char **argv);
 ```
 
 - MPI環境を起動・初期化する
@@ -585,7 +606,7 @@ int MPI_Wait(MPI_Request* request, MPI_Status* status);
 ### MPIデータ型
 
 |C/C++ data type|MPI data type    |
-|---------------|-----------------|
+|:--------------|:----------------|
 |char           |MPI_CHAR         |
 |int            |MPI_INT          |
 |long           |MPI_LONG         |
@@ -840,7 +861,7 @@ for (int i = 0; i < 100; ++i) {
 ```
 
 |関数名                 |内容                               |
-|-----------------------|-----------------------------------|
+|:----------------------|:----------------------------------|
 | omp_get_num_procs()   | プロセッサの数を返す              |
 | omp_get_max_threads() | 実行可能なスレッドの最大数を取得  |
 | omp_get_num_threads() | 実行しているスレッド数を取得      |
@@ -878,14 +899,6 @@ $ gcc –fopenmp
 - ノード内メモリをプロセスが占有できる
 - 2種類の並列コードを書かないといけない
 
-
-## FX10でのハイブリッド並列実行方法
-- ノード間並列はMPIで
-- ノード内並列はOpenMPで
-
-- FX10利用の手引
-    - http://www.cc.u-tokyo.ac.jp/system/fx10/fx10-tebiki/
-    - 8.4.2　バッチジョブ実行例(5)を参考にすること
     
 ***
 ## 参考文献
@@ -903,7 +916,7 @@ $ gcc –fopenmp
 
 
 ***
-# FX10 演習環境の構築
+# 演習環境の構築
 
 ***
 ## 概要
@@ -911,7 +924,7 @@ $ gcc –fopenmp
 + ECCSのマシン(iMac)にログインする
 + ターミナルを起動する
     - コンソール画面が表示される
-+ sshでFX10システム(Oakleaf)にログインする
++ sshでスーパーコンピュータシステムにログインする
 
 ***
 ## ssh接続の仕組み
@@ -944,29 +957,29 @@ $ ssh-keygen -t rsa
 ***
 ## ssh公開鍵の登録
 
-- 詳しくはhttp://www.cc.u-tokyo.ac.jp/system/fx10/fx10-login.html
+- 詳しくは http://www.cc.u-tokyo.ac.jp/system/reedbush/QuickStartGuide.pdf
 - 手順
     + webブラウザ(safari)を立ち上げる
     + 以下のURLを入力する
-        - https://oakleaf-www.cc.u-tokyo.ac.jp/cgi-bin/hpcportal/index.cgi
+        - https://reedbush-www.cc.u-tokyo.ac.jp/
     + アカウントとパスワードを入力する
         - パスワードはそのものではなく、表示されている文字列の奇数番目を繋ぎ合わせたもの
      + 公開鍵を登録する
 
 ***
-## FX10へのログイン
+## スーパーコンピュータシステムへのログイン
 
 - ターミナルから以下を入力
 
 ```bash
-$ ssh [FX10のアカウント名]@oakleaf-fx.cc.u-tokyo.ac.jp
+$ ssh [スパコンのアカウント名]@oakleaf-fx.cc.u-tokyo.ac.jp
 ```
 
 - パスフレーズが聞かれた場合は、設定したパスフレーズを入れる
 - 成功するとログインできる
 
 ***
-## FX10とのファイル転送
+## ファイル転送
 
 - scpを使う
 
@@ -976,31 +989,31 @@ $ scp [転送元] [転送先]
 
 - cp コマンドと同様の使い方 (第４文型: SVOO)
     - -r オプションで(サブ)ディレクトリも一緒に
+- 場所(ファイル)の指定方法
+    - [[サーバーアカウント@]サーバー名:]ディレクトリ.../ファイル名
+    - サーバー名を省略した場合はローカルマシンが想定
 
-- MacからFX10へ @Mac
+- ローカルからリモートへ
 ```
-$ scp   ./sample.c  oakleaf-fx.cc.u-tokyo.ac.jp:somewhere
+$ scp   ./sample.c  reedbush-u.cc.u-tokyo.ac.jp:somewhere
 ```
 
-- FX10からMacへ @Mac
+- リモートからローカルへ
 ```
-$ scp oakleaf-fx.cc.u-tokyo.ac.jp:sample.c   ./somewhere
+$ scp reedbush-u.cc.u-tokyo.ac.jp:sample.c   ./somewhere
 ```
 
 ***
 ## バッチシステムでの実行方法
 
 - 多くのスパコンではインタラクティブな実行はせず、バッチ処理を行う
-- FX10システムではPJMと呼ばれるバッチシステムを利用
 - 使い方
 
 
 |内容                 | コマンド             |
 |---------------------|----------------------|
-|ジョブの投入         | pjsub "スクリプト"   |
-|状況確認             | pjstat               |
-|混雑度を見る         | pjstat -b            |
-|ジョブの削除         | pjdel "ジョブID"     |
-|実行中のジョブの削除 | pjdel –k "ジョブID"  |
+|ジョブの投入         | qsub "スクリプト"    |
+|状況確認             | rbstat               |
+|ジョブの削除         | qdel "ジョブID"      |
 
 
