@@ -8,6 +8,8 @@ PANDOC_OUT = $(PANDOC_SRC:%.md=%.pdf)
 
 BEAMER_THEME = "Berlin"
 #BEAMER_THEME = "lankton-keynote"
+#COLOR_THEME = "dolphin"
+COLOR_THEME = "rose"
 
 default: pandoc
 
@@ -28,7 +30,7 @@ pandoc:
 	--latex-engine=lualatex \
 	--listings \
 	-V theme:$(BEAMER_THEME) \
-	-V colortheme:dolphin \
+	-V colortheme:$(COLOR_THEME) \
 	-V fonttheme:structurebold \
 	-V classoption:aspectratio=169 \
 	--slide-level 2 \

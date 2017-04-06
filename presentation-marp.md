@@ -1,10 +1,21 @@
-% 実践的シミュレーションソフトウェアの開発演習(HPC基礎)
-% 平野 敏行
-% 2017/04/13
+<!-- $size: A4 -->
+<!-- $theme: default -->
+<!-- $template: invert -->
+<!-- page_number: true -->
+<!-- *page_number: false -->
+<!-- footer: -->
 
+# 実践的シミュレーションソフトウェアの開発演習(HPC基礎)
+
+## 平野 敏行
+## 2017/04/13
+
+---
 # はじめに
 
-## 目的
+
+---
+# 目的
 
 - HPCプログラミングに必要な基礎を身につける
     - HPCハードウェアの基礎知識
@@ -12,9 +23,12 @@
 - 提出課題: 基礎演習
 
 
+---
 # 基礎演習 (提出課題)
 
-## 目的
+
+---
+# 目的
 
 - Linuxシステム・MPI/OpenMPの使い方に慣れる
     - ファイル・ディレクトリの操作
@@ -29,20 +43,22 @@
     - 簡単なMPI / OpenMPの並列計算の書き方・挙動を習得
     - 応用演習に備える
 
-***
-## 課題
+
+---
+# 課題内容
 
 - 以下を満たすプログラムを作成しなさい。
     - バイナリファイルで与えられた行列A, Bの積Cを計算する。
     - 行列Cを指定されたフォーマットでファイルに出力する。
 
 - 最新情報・ヒントはwikiを参照すること
-    - https://bitbucket.org/fumitoshi_sato/2017lecture/wiki/基礎演習課題(行列積)について
+    - https://bitbucket.org/hiracchi/2017lecture/wiki/基礎演習課題(行列積)について
 
 - わからないことは何でも聞いてください。
 
-***
-## 注意事項
+
+---
+# 注意事項
 
 - 行列の次元はファイルに記録されている
     - (コードに決め打ちしないこと)
@@ -56,50 +72,60 @@
 - 締切:　2017/05/22(木) (暫定)まで
     - スケーラビリティのテスト(excelファイル)も添付のこと
 
-***
-## 行列ファイルの仕様
+---
+# 行列ファイルの仕様
 
 - 先頭から32bit符号付き整数(int)で行数、列数が順に格納される
 - 倍精度浮動小数点型(double)で(0, 0), (1, 0), (2, 0), … (N-1, 0), (1, 0), …, (N-1, N-1)の順に値が格納される
 
 
+---
 # HPC概略
 
-## スーパーコンピュータ
+
+---
+# スーパーコンピュータ
 
 - 当時の最新技術が搭載された最高性能のコンピュータ
     - High Performance Computing (高性能計算)
-    - 基本構成(CPU, メモリ, ディスク, OS等)はパーソナルコンピュータと同じ
+    - 基本構成(CPU, メモリ, ディスク, OS等)は  
+      パーソナルコンピュータと同じ
     - 非常に高価
     - 最近の流行は分散並列型
-
-## Reedbush-Uシステム概略
+    
+---
+# Reedbush-Uシステム概略
 
 - http://www.cc.u-tokyo.ac.jp/system/reedbush/reedbush_intro.html
 
-![Reedbush-U](./reedbush_intro.png){width=80%}
+![fit center](./reedbush_intro.png)
 
 
-## Top500 (http://top500.org/) (1/2)
+---
+# Top500 (http://top500.org/) (1/2)
 
-    - Rpeak: 実効性能値
-    - Rmax: 理論性能値
+    R_peak: 実効性能値
+    R_max: 理論性能値
 
-![TOP500-poster1](./TOP500_201611_1.png){width=80%}
-
-
-## Top500 (2/2)
-
-![TOP500-poster2](./TOP500_201611_2.png){width=80%}
+![80% center](./TOP500_201611_1.png)
 
 
+---
+# Top500 (2/2)
+
+![80% center](./TOP500_201611_2.png)
+
+
+---
 # HPCプログラミング
 
 ハードウェアの性能を十分発揮させるために
 
-## コンピュータの性能評価
 
-### FLOPS
+---
+# コンピュータの性能評価
+
+## FLOPS
 - Floating Point Operations Per Second
 - 1秒間に浮動小数点演算(Floating Point Operations)が何回実行できるか
     - 理論FLOPS = クロック周波数 x コア数 x クロックあたりの浮動小数点演算数
@@ -107,39 +133,42 @@
     - 例えば iMac (Intel Core i5 2.8 GHz Quad-core)
         - 2.8 GHz x 4 core x 16 op = 179.2 GFLOPS
 
-- 浮動小数点数
-    - コンピュータの数値表現
-        - 主に IEEE 754 方式
-    - 種類
+---
+# 浮動小数点数
 
-|        | 情報量 (bit)                                         |備考                        |
-|:-------|:-----------------------------------------------------|:---------------------------|
-| 単精度 | 符号部 1 + 指数部  8 + 仮数部  23 =  32 (=  4 octet) |Single Precision; SP; float |
-| 倍精度 | 符号部 1 + 指数部 11 + 仮数部  52 =  64 (=  8 octet) |Double Precision; DP; double|
-| 4倍精度| 符号部 1 + 指数部 15 + 仮数部 112 = 128 (= 16 octet) |Quad Presicion              |
-| 半精度 | 符号部 1 + 指数部  5 + 仮数部  10 =  16 (=  2 octet) |half                        |
+- コンピュータの数値表現
+  - 主に IEEE 754 方式
+- 種類
 
-
-***
-- 様々なCPUのクロックあたりの浮動小数点演算数
-    - SSE: ストリーミングSIMD拡張命令(Streaming SIMD Extensions)
-        - SIMD: single instruction multiple data
-    - FMA: 積和演算(fused multiply-add)
-
-|CPU                                                   |                 |備考                                  |
-|:-----------------------------------------------------|----------------:|--------------------------------------|
-|Intel Core2, Nehalem                                  | 4 DP FLOPS/Clock|2-wide SSE2(加法) + 2-wide SSE2(乗法) |
-|Intel Sandy Bridge/Ivy Bridge                         | 8 DP FLOPS/Clock|4-wide FMA                            |
-|Intel Haswell/Broadwell/Skylake/Kaby Lake             |16 DP FLOPS/Clock|4-wide FMA x 2                        |
-|AMD Opteron(K10)                                      | 4 DP FLOPS/Clock|2-wide SSE2(加法) + 2-wide SSE2(乗法) |
-|AMD FX(Bulldozer)                                     | 8 DP FLOPS/Clock|4-wide FMA                            |
-|AMD Ryzen                                             | 8 DP FLOPs/cycle|4-wide FMA                            |
-|Intel Xeon Phi (Knights Landing)                      |32 DP FLOPs/Clock|8-wide FMA x 2                        |
+|       | 情報量 (bit)       |備考                        |
+|:------|:------------------|:---------------------------|
+| 単精度 |   32 (=  4 octet) |Single Precision; SP; float |
+| 倍精度 |   64 (=  8 octet) |Double Precision; DP; double|
+| 4倍精度|  128 (= 16 octet) |Quad Presicion              |
+| 半精度 |   16 (=  2 octet) |half                        |
 
 
+---
+# 様々なCPUのクロックあたりの浮動小数点演算数
 
-***
-- 様々なハードの浮動小数点演算能力
+```
+SSE: ストリーミングSIMD拡張命令(Streaming SIMD Extensions)
+  SIMD: single instruction multiple data
+FMA: 積和演算(fused multiply-add)
+```
+
+
+|CPU                    |                  |備考                    |
+|:----------------------|-----------------:|-----------------------|
+|Intel Core2, ~Nehalem  | 4 DP FLOPS/Clock |SSE2(add)+SSE2(mul) |
+|Intel Sandy Bridge~    | 8 DP FLOPS/Clock |4-wide FMA            |
+|Intel Haswell~         |16 DP FLOPS/Clock |4-wide FMA x 2        |
+|AMD Ryzen              | 8 DP FLOPs/Cycle |4-wide FMA            |
+|Intel Xeon Phi (K.L.)  |32 DP FLOPs/Clock |8-wide FMA x 2        |
+
+
+---
+# 様々なハードの浮動小数点演算能力
 
 |名称             |                         |             |備考             |
 |:----------------|-------------------------|------------:|-----------------|
@@ -148,12 +177,11 @@
 |Cell             |                         |218 GFLOPS   |PS3(全体:2TFLOPS)|
 |Apple A7         | 400 MHz x 4 x 64        |102.4 GFLOPS |iPhone5s         |
 |京               |                         |10.51 PFLOPS |                 |
-|地球シミュレータ |                         |35.86 TFLOPS |                 |
-|Deep Blue        |                         |11.38 GFLOPS | 1997            |
+|地球シミュレータ   |                         |35.86 TFLOPS |                 |
 
 
-***
-### メモリバンド幅
+---
+# メモリバンド幅
 
 - 単位時間あたりに転送できるデータ量
     - 理論バンド幅 = DRAMクロック周波数 x 1クロックあたりのデータ転送回数  
@@ -167,8 +195,9 @@
 - 単純な計算を大量に行う場合は、メモリバンド幅が性能を決める
 
 
-***
-### Byte per FLOPS
+---
+# Byte per FLOPS
+
 - 通称 B/F値
 - 1回の浮動小数点演算の間にアクセスできるデータ量
     - Reedbush: 153.6 GB/s / (2.1x16x36) GFLOPS = 0.127
@@ -182,7 +211,8 @@
 - 高速化のためには、如何にCPUを有効活用するかがポイント
 
 
-## 階層メモリ構造
+---
+# 階層メモリ構造
 
 |名称                 |記憶容量|アクセス速度(遅延)|転送速度(帯域)|
 |:--------------------|-------:|-----------------:|-------------:|
@@ -194,7 +224,8 @@
 - キャッシュを効率的に使わないと遅い
 
 
-## データ格納構造
+---
+# データ格納構造
 
 - データはまとまって取り扱われる(=キャッシュライン)
     - 連続したデータは近く(キャッシュ内)に存在する確率が高い
@@ -203,11 +234,15 @@
 - (C/C++言語の)1次元配列は連続データ
     - うまく活用することで高速化が期待できる
 
-## 行列積でのメモリアクセス
 
-![行列積でのメモリアクセス](./行列メモリアクセス.png)
+---
+# 行列積でのメモリアクセス
 
-## 単体チューニング
+![80% center](./行列メモリアクセス.png)
+
+
+---
+# 単体チューニング
 
 - CPUへ如何にうまくデータを送り込ませるかがポイント
 - 転送量 < 演算量 の場合
@@ -223,24 +258,30 @@
         - 行列-ベクトル積が必要 → 帯行列にする
 
 
+---
 # 並列化プログラミング
 
-## なぜ並列化が必要なのか
+
+---
+# なぜ並列化が必要なのか
 
 - “The Free Lunch Is Over (フリーランチは終わった)”
     - http://www.gotw.ca/publications/concurrency-ddj.htm
 
-![CPU](./CPU.png)
+![50% center](./CPU.png)
 
 
-## フリーランチは終わった
+---
+# フリーランチは終わった
 
 + クロックが上がるとソフトウェアのパフォーマンスも勝手に向上
 + クロック上昇の限界
 + CPUを複数使用するしかない
 + 並列処理のプログラムを書かねばパフォーマンスが上がらず
 
-## 並列化プログラミングの心構え
+
+---
+# 並列化プログラミングの心構え
 
 - 本当に並列化が必要か
     - まずは単体動作でのチューニングをすべき
@@ -252,9 +293,10 @@
 - 並列化したらなんでも速くなると思ったら大間違い
 
 
-## (並列)性能評価指標
+---
+# (並列)性能評価指標 (1/4)
 
-### 台数効果(高速化率)
+## 台数効果(高速化率)
 
 $$
 S_P = \frac{T_S}{T_P}
@@ -267,63 +309,79 @@ $$
     - $S_P>P$ はsuper linear speedup とよばれる
     - キャッシュヒットなどによって高速化されたケースなど
 
-***
-### 並列化効率
+
+---
+# (並列)性能評価指標 (2/4)
+
+## 並列化効率
 
 $$
-E_P = \frac{S_P}{P} x 100  
+E_P = \frac{S_P}{P} \times 100  
 $$
 
 - 並列化がどれだけ上手に行われているかを示す指標
 
-***
-### アムダールの法則 Amdahl's law
+
+---
+# (並列)性能評価指標 (3/4)
+
+## アムダールの法則
 
 - 1台での実行時間$T_S$のうち、並列化ができる割合(並列化率)を$a$とすると、
 $P$台での並列実行時間$T_P$は
 $$
 T_P = \frac{T_S}{P} \cdot a + T_S (1-a)
 $$
-従って台数効果は
+
+- したがって台数効果は
 $$
 S_P = \frac{T_S}{T_P} = \frac{1}{(a / P +(1- a))}
 $$
 
-***
-
 - 無限台使っても(P→∞), 台数効果は$1/(1-a)$しか出ない
-    - ←アムダールの法則
+    - → アムダールの法則
+
+
+---
+# (並列)性能評価指標 (4/4)
+
+## アムダールの法則のポイント
+
 - 全体の90%を並列化しても、1/(1-0.9)=10倍で飽和する
 
-![Amdahl's law](./Amdahl.png){width=50%}
+![center](./Amdahl.png)
 
 - 「京」(約100万並列)で性能を出す(並列化効率90%以上)には並列化率はいくら必要か？
 
-***
-### アムダールの法則のポイント
+
+---
+# 並列化ではやくなる処理・はやくならない処理
 
 - "並列化出来る処理"と"頑張っても並列化できない処理"とがある
 
-![Amdahl_point](./Amdahl_point.png){width=50%}
-
-***
-### スケーラビリティ(並列性能向上)の評価
-
-- ストロング・スケーリング
-    - 問題規模は一定
-    - プロセス数を増加
-    - 並列数が多くなると達成は困難
-- ウィーク・スケーリング
-    - 1プロセスあたりの問題規模を一定
-    - プロセス数を増加
-
-![scalability](./scalability.png){width=50%}
-
-***
-### Excelシートの使い方
+![Amdahl_point](./Amdahl_point.png)
 
 
-## プロセスとスレッド
+---
+# スケーラビリティ(並列性能向上)の評価
+
+## ストロング・スケーリング
+  - 問題規模は一定
+  - プロセス数を増加
+  - 並列数が多くなると達成は困難 (cf. アムダールの法則)
+## ウィーク・スケーリング
+  - 1プロセスあたりの問題規模を一定
+  - プロセス数を増加
+
+![50% center](./scalability.png)
+
+
+---
+# Excelシートの使い方
+
+
+---
+# プロセスとスレッド
 
 - プロセス
     - OSから独立したリソースを割り当てられる
@@ -336,22 +394,25 @@ $$
     - 各スレッドはプロセス内メモリを共有する
 
 
-## 並列プログラミングの仕組みと方法
+---
+# 並列プログラミングの仕組みと方法
 
-- マルチプロセス
-    - プロセス間でデータのやりとりをする仕組み
-    - プロセス間でメモリ空間は(基本的には)共有できない
-    - 別の計算機上にあるプロセスとも通信できる
-    - MPI(Message Passing Interface)
-- マルチスレッド
-    - プロセス内部で複数スレッドが並列動作
-    - プロセスのメモリ空間を複数スレッドで共有できる
-    - 排他処理が必要
-    - 同一システム上でしか動作しない
-    - pthread(POSIX thread), OpenMP
+# マルチプロセス
+  - プロセス間でデータのやりとりをする仕組み
+  - プロセス間でメモリ空間は(基本的には)共有できない
+  - 別の計算機上にあるプロセスとも通信できる
+  - MPI(Message Passing Interface)
+
+# マルチスレッド
+  - プロセス内部で複数スレッドが並列動作
+  - プロセスのメモリ空間を複数スレッドで共有できる
+  - 排他処理が必要
+  - 同一システム上でしか動作しない
+  - pthread(POSIX thread), OpenMP
 
 
-## MPIの特徴
+---
+# MPIの特徴
 
 - ライブラリ規格の一つ
     - プログラミング言語、コンパイラに依存しない
@@ -364,7 +425,8 @@ $$
     - 裏を返せばプログラミングが大変
 
 
-## MPIの実装
+---
+# MPIの実装
 
 - MPICH
     - Argonne National Laboratoryで開発
@@ -377,27 +439,29 @@ $$
     - MPICH2がベースが多い
 
 
-## MPIプログラミングの作法
+---
+# MPIプログラミングの作法
 
-- 初期化
-    - 使う資源(リソース)を確保・準備する
-    - すべてのプロセスが呼び出す必要がある
-    - MPI_Init()関数
-- 後始末
-    - 使った資源(リソース)を返す
-    - 返さないとゾンビ(ずっと居残るプロセス)になる場合も
-    - すべてのプロセスが呼び出す必要がある
-    - MPI_Finalize()関数
++ 初期化
+  - 使う資源(リソース)を確保・準備する
+  - すべてのプロセスが呼び出す必要がある
+  - MPI_Init()関数
++ 後始末
+  - 使った資源(リソース)を返す
+  - 返さないとゾンビ(ずっと居残るプロセス)になる場合も
+  - すべてのプロセスが呼び出す必要がある
+  - MPI_Finalize()関数
 
 
-## MPI関数の性質
+---
+# MPI関数の性質
 
-- 通信
-    - 集団通信
-        - 全プロセスが通信に参加
-        - 全プロセスが呼ばなければ止まる
-    - 1対1通信
-        - 通信に関与するプロセスのみが関数を呼ぶ
+## 通信
+- 集団通信
+  - 全プロセスが通信に参加
+    - 全プロセスが呼ばなければ止まる
+  - 1対1通信
+    - 通信に関与するプロセスのみが関数を呼ぶ
 - ブロッキング
     - ブロッキング通信
         - 通信が完了するまで次の処理を待つ
@@ -405,10 +469,10 @@ $$
         - 通信しながら別の処理が可能
 
 
-## 主なMPI関数
+---
+# 主なMPI関数 (初期化)
 
-***
-### MPI_Init
+## MPI_Init
 
 ```
 #include <mpi.h>
@@ -421,8 +485,11 @@ int MPI_Init(int *argc, char **argv);
     - argv: 引数の文字列を指すポインタ配列
 - 戻り値: MPI_Success(正常)
 
-***
-### MPI_Finalize
+
+---
+# 主なMPI関数 (後始末)
+
+## MPI_Finalize
 
 ```
 #include <mpi.h>
@@ -431,8 +498,11 @@ int MPI_Finalize();
 
 - MPI環境の終了処理を行う
 
-***
-### MPI_Comm_size
+
+---
+# 主なMPI関数 (ユーティリティ: 1/2)
+
+## MPI_Comm_size
 
 ```
 #include <mpi.h>
@@ -446,8 +516,11 @@ int MPI_Comm_size(MPI_Comm comm, int *size);
     - size: (out) プロセスの総数
 - 戻り値: MPI_Success(正常)
 
-***
-### MPI_Comm_rank
+
+---
+# 主なMPI関数 (ユーティリティ: 2/2)
+
+## MPI_Comm_rank
 
 ```
 #include <mpi.h>
@@ -461,8 +534,11 @@ int MPI_Comm_rank(MPI_Comm comm, int *rank);
     - rank: (out) ランク
 - 戻り値: MPI_Success(正常)
 
-***
-### MPI_Bcast
+
+---
+# 主なMPI関数 (全体通信: 1/2)
+
+## MPI_Bcast
 
 ```
 #include <mpi.h>
@@ -480,8 +556,10 @@ int root, MPI_Comm comm);
 - 戻り値: MPI_Success(正常)
 
 
-***
-### MPI_Allreduce
+---
+# 主なMPI関数 (全体通信: 2/2)
+
+## MPI_Allreduce
 
 ```
 #include <mpi.h>
@@ -501,8 +579,10 @@ MPI_Datatype datatype, MPI_Op op, MPI_Comm comm);
 - 戻り値: MPI_Success(正常)
 
 
-***
-### MPI_Send
+---
+# 主なMPI関数 (単体通信: 1/4)
+
+## MPI_Send
 
 ```
 #include <mpi.h>
@@ -522,8 +602,10 @@ int dest, int tag, MPI_Comm comm);
 - 戻り値: MPI_Success(正常)
 
 
-***
-### MPI_Recv
+---
+# 主なMPI関数 (単体通信: 2/4)
+
+## MPI_Recv
 
 ```
 #include <mpi.h>
@@ -544,8 +626,10 @@ int source, int tag, MPI_Comm comm, MPI_Status* status);
 - 戻り値: MPI_Success(正常)
 
 
-***
-### MPI_Isend
+---
+# 主なMPI関数 (単体通信: 3/4)
+
+## MPI_Isend
 
 ```
 #include <mpi.h>
@@ -566,7 +650,9 @@ int dest, int tag, MPI_Comm comm, MPI_Request* request);
 - 戻り値: MPI_Success(正常)
 
 
-***
+---
+# 主なMPI関数 (単体通信: 4/4)
+
 ### MPI_Irecv
 
 ```
@@ -587,8 +673,10 @@ int source, int tag, MPI_Comm comm, MPI_Request* request);
     - request: (out) リクエストハンドル
 
 
-***
-### MPI_Wait
+---
+# 主なMPI関数 (通信その他)
+
+## MPI_Wait
 
 ```
 #include <mpi.h>
@@ -602,8 +690,8 @@ int MPI_Wait(MPI_Request* request, MPI_Status* status);
     - status: (out) 受信状態
 
 
-***
-### MPIデータ型
+---
+# MPIデータ型
 
 |C/C++ data type|MPI data type    |
 |:--------------|:----------------|
@@ -616,8 +704,9 @@ int MPI_Wait(MPI_Request* request, MPI_Status* status);
 |unsigned int   |MPI_UNSIGNED_INT |
 |unsigned long  |MPI_UNSIGNED_LONG|
 
-***
-### MPI サンプルコード(1/2)
+
+---
+# MPI サンプルコード(1/2)
 
 ```
 #include <iostream>
@@ -634,8 +723,10 @@ int main(int argc, char *argv[])
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 ```
 
-***
-### MPI サンプルコード(2/2)
+
+---
+# MPI サンプルコード(2/2)
+
 ```
     char hostname[256];
     for (int i = 0; i < size; ++i) {
@@ -651,8 +742,9 @@ int main(int argc, char *argv[])
 }
 ```
 
-***
-### MPIプログラミングのコツ
+
+---
+# MPIプログラミングのコツ
 
 - コンパイラは専用のもの(mpicxx, mpifortなど)を使う
     - コンパイル・ビルドに必要なライブラリやインクルードパスを自動的に設定してくれる
@@ -666,8 +758,9 @@ int main(int argc, char *argv[])
 - プロファイル
     - gprofならGMON_OUT_PREFIX環境変数を使うと良い
 
-***
-### MPI補足
+
+---
+# MPI補足
 
 - MPIもソフトウェア
     - バグは少なからずある
@@ -680,11 +773,13 @@ int main(int argc, char *argv[])
     - デバッグ作業は格段に難しくなる
     - MPI_Test(), MPI_Wait()が呼ばれて初めて通信を開始する実装がある
 
-***
-## OpenMP
 
-***
-### OpenMPの特徴
+---
+# OpenMP
+
+
+---
+# OpenMPの特徴
 
 - C/C++およびFortranプログラミング言語をサポートするAPI(Application Program Interface)
     - 指示文(pragmaなので非対応コンパイラでも問題なし)
@@ -698,8 +793,9 @@ int main(int argc, char *argv[])
     - 裏を返せば、処理がブラックボックス化
 - 最近はGPUコードも吐けるように
 
-***
-### OpenMPの書き方(C/C++)
+
+---
+# OpenMPの書き方(C/C++)
 
 - 並列実行
 ```
@@ -721,8 +817,9 @@ for (int i = 0; i < 10; ++i) {
 }
 ```
 
-***
-### OpenMP サンプル(1/2)
+
+---
+# OpenMP サンプル(1/2)
 
 ```
 #include <iostream>
@@ -740,8 +837,10 @@ int main()
     }
 ```
 
-***
-### OpenMP サンプル(2/2)
+
+---
+# OpenMP サンプル(2/2)
+
 ```
     int sum = 0;
 #pragma omp parallel for
@@ -758,10 +857,12 @@ int main()
 
 ```
 
-***
-### 代表的なOpenMP pragma
 
-* ブロックを並列化
+---
+# 代表的なOpenMP pragma (1)
+
+## ブロックを並列化
+
 ```
 #pragma omp parallel
 {
@@ -769,8 +870,11 @@ int main()
 }
 ```
 
-***
-* forループを並列化(1; forを分割処理)
+
+---
+# 代表的なOpenMP pragma (2)
+
+## forループを並列化 (forを分割処理)
 ```
 #pragma omp parallel
 {
@@ -781,7 +885,7 @@ int main()
 }
 ```
 
-* forループを並列化(2; parallelと一緒に指定)
+## forループを並列化 (parallelと一緒に指定)
 ```
 #pragma omp parallel for
 for (int i = 0; i < 100; ++i) {
@@ -789,8 +893,11 @@ for (int i = 0; i < 100; ++i) {
 }
 ```
 
-***
-* sectionを並行に実行
+
+---
+# 代表的なOpenMP pragma (3)
+
+## sectionを並行に実行
 
 ```
 #pragma omp parallel sections
@@ -807,8 +914,11 @@ for (int i = 0; i < 100; ++i) {
 }
 ```
 
-***
-* 1つのスレッドだけが実行
+
+---
+# 代表的なOpenMP pragma (4)
+
+## 1つのスレッドだけが実行
 
 ```
 #pragma omp parallel
@@ -820,7 +930,8 @@ for (int i = 0; i < 100; ++i) {
 }
 ```
 
-* 直後のブロックを排他的に処理
+
+## 直後のブロックを排他的に処理
 
 ```
 #pragma omp parallel
@@ -832,8 +943,11 @@ for (int i = 0; i < 100; ++i) {
 }
 ```
 
-***
-* スレッドの同期を取る
+
+---
+# 代表的なOpenMP pragma (5)
+
+## スレッドの同期を取る
 
 ```
 #pragma omp parallel
@@ -843,7 +957,7 @@ for (int i = 0; i < 100; ++i) {
 }
 ```
 
-* 共有変数のメモリの一貫性を保つ
+## 共有変数のメモリの一貫性を保つ
 
 ```
 #pragma omp parallel
@@ -852,9 +966,11 @@ for (int i = 0; i < 100; ++i) {
 }
 ```
 
-***
-* ライブラリ関数
-    * omp.hをインクルードすること
+
+---
+## OpenMP ライブラリ関数
+    
+- omp.hをインクルードすること
 
 ```
 #include <omp.h>
@@ -867,67 +983,73 @@ for (int i = 0; i < 100; ++i) {
 | omp_get_num_threads() | 実行しているスレッド数を取得      |
 | omp_get_thread_num()  | 実行しているスレッド番号を取得    |
 
-***
-### OpenMPの注意点
+
+---
+# OpenMP 注意点
 
 - ビルド時は多くの場合コンパイルオプションが必要
     - gnu compiler
 ```bash
 $ gcc –fopenmp
 ```
+    - intel compiler
+```bash
+$ icpc –openmp
+```
 
 - 共有変数かprivate変数かを意識すること
-    - `#omp parallel`文の前にある変数は共有変数
-- forループカウンタは符号付き整数
-    - OpenMP 3.0から符号無しもOK
+    - `#omp parallel` 文の前にある変数は共有変数
 - 環境変数に注意
-    - `OMP_NUM_THREADS`	並列スレッド数を設定する
-    - `OMP_SCHEDULE`		並列動作を指定
+    - `OMP_NUM_THREADS`: 並列スレッド数を設定する
+    - `OMP_SCHEDULE`: 並列動作を指定
 - コンパイラによって実装・挙動が異なる場合がある
 
 
-***
-## ハイブリッド並列
+---
+# MPI/OpenMP ハイブリッド並列
 
-### Flat MPI
+## Flat MPI
 - ノード間はMPIノード内もMPI
 - ノード内のメモリが共有できない(プロセスあたりのメモリ量が少ない)
 - MPIのコードだけを書けばよい
 
-### ハイブリッド並列
+## ハイブリッド並列
 - ノード間はMPI ノード内はOpenMP
 - ノード内メモリをプロセスが占有できる
 - 2種類の並列コードを書かないといけない
 
 
-***
-## 参考文献
+---
+# 参考文献
 
-### MPI
+## MPI
 
 - RIST 青山幸也 著 https://www.hpci-office.jp/pages/seminar_text
 - P.パチェコ 著, MPI並列プログラミング ISBN-13: 978-4563015442
 - 片桐孝洋 著, スパコンプログラミング入門: 並列処理とMPIの学習 ISBN-13: 978-4130624534
 
-### OpenMP
+## OpenMP
 
 - OpenMP入門 http://www.isus.jp/article/openmp-special/getting-started-with-openmp/
 - 北山 洋幸 著, OpenMP入門―マルチコアCPU時代の並列プログラミング ISBN-13: 978-4798023434
 
 
-***
+---
 # 演習環境の構築
 
-***
-## 概要
+
+---
+# 概要
 
 + ECCSのマシン(iMac)にログインする
 + ターミナルを起動する
     - コンソール画面が表示される
 + sshでスーパーコンピュータシステムにログインする
 
-***
-## ssh接続の仕組み
+- 2つのアカウント (ECCSとスパコン) の違いに注意!
+
+---
+# ssh接続の仕組み
 
 - 暗号化の必要性
     - インターネットにおけるデータの盗聴・なりすましの危険
@@ -935,10 +1057,11 @@ $ gcc –fopenmp
     - 秘密鍵で暗号化したデータ → 公開鍵でしか復号できない
     - 公開鍵で暗号化したデータ → 秘密鍵でしか復号できない
 
-![ssh-connection](./ssh-connection.png){width=50%}
+![50% center](./ssh-connection.png)
 
-***
-## ssh鍵の作成
+
+---
+# ssh鍵の作成
 
 + ターミナルを起動する
 + ssh-keygenを実行する
@@ -947,15 +1070,16 @@ $ ssh-keygen -t rsa
 ```
 
 - 出来るファイル
-    - `$HOME/.ssh/id_rsa`
-        - 秘密鍵
-        - 誰にも見せないこと
-        - メールで送らないこと
-    - `$HOME/.ssh/id_rsa.pub`
-        - 公開鍵(見られてもOK)
+  - `$HOME/.ssh/id_rsa`
+    - 秘密鍵
+    - 誰にも見せないこと
+    - メール等で送らないこと
+  - `$HOME/.ssh/id_rsa.pub`
+    - 公開鍵(見られてもOK)
 
-***
-## ssh公開鍵の登録
+
+---
+# ssh公開鍵の登録
 
 - 詳しくは http://www.cc.u-tokyo.ac.jp/system/reedbush/QuickStartGuide.pdf
 - 手順
@@ -966,22 +1090,22 @@ $ ssh-keygen -t rsa
         - パスワードはそのものではなく、表示されている文字列の奇数番目を繋ぎ合わせたもの
      + 公開鍵を登録する
 
-***
-## スーパーコンピュータシステムへのログイン
+
+---
+# スーパーコンピュータシステムへのログイン
 
 - ターミナルから以下を入力
 
 ```bash
-$ ssh [スパコンのアカウント名]@oakleaf-fx.cc.u-tokyo.ac.jp
+$ ssh [スパコンのアカウント名]@reedbush-u.cc.u-tokyo.ac.jp
 ```
 
 - パスフレーズが聞かれた場合は、設定したパスフレーズを入れる
 - 成功するとログインできる
 
-***
-## ファイル転送
 
-- scpを使う
+---
+# ファイル転送 (scp)
 
 ```bash
 $ scp [転送元] [転送先]
@@ -995,23 +1119,25 @@ $ scp [転送元] [転送先]
 
 - ローカルからリモートへ
 ```
-$ scp   ./sample.c  reedbush-u.cc.u-tokyo.ac.jp:somewhere
+$ scp   ./sample.c  xxxx@reedbush-u.cc.u-tokyo.ac.jp:somewhere
 ```
 
 - リモートからローカルへ
 ```
-$ scp reedbush-u.cc.u-tokyo.ac.jp:sample.c   ./somewhere
+$ scp xxxx@reedbush-u.cc.u-tokyo.ac.jp:sample.c   ./somewhere
 ```
 
-***
-## バッチシステムでの実行方法
 
-- 多くのスパコンではインタラクティブな実行はせず、バッチ処理を行う
+---
+# バッチシステムでの実行方法
+
+多くのスパコンではインタラクティブな実行はせず、バッチ処理を行う
+
 - 使い方
-
 
 |内容                 | コマンド             |
 |---------------------|----------------------|
 |ジョブの投入         | qsub "スクリプト"    |
 |状況確認             | rbstat               |
 |ジョブの削除         | qdel "ジョブID"      |
+
