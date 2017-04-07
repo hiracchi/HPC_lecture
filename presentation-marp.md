@@ -170,14 +170,19 @@ FMA: 積和演算(fused multiply-add)
 ---
 # 様々なハードの浮動小数点演算能力
 
-|名称             |                         |             |備考             |
-|:----------------|-------------------------|------------:|-----------------|
-|GeForce GTX 480  |1401 MHz x  480 core x 2 |1.345 TFLOPS |GPU              |
-|GeForce GTX TITAN| 876 MHz x 2688 core x 2 |4.7 TFLOPS   |GPU              |
-|Cell             |                         |218 GFLOPS   |PS3(全体:2TFLOPS)|
-|Apple A7         | 400 MHz x 4 x 64        |102.4 GFLOPS |iPhone5s         |
-|京               |                         |10.51 PFLOPS |                 |
-|地球シミュレータ   |                         |35.86 TFLOPS |                 |
+|名称              |                 |備考             |
+|:-----------------|----------------:|-----------------|
+|GeForce GTX 1080  | SP: 8.87 TFLOPS |GPU              |
+|                  | DP:  138 GFLOPS |                 |
+|Radeon R9 290X    | SP：5.63 TFLOPS |GPU              |
+|                  | DP：1.40 TFLOPS |                 |
+|Pentium (300 MHz) |      300 MFLOPS |CPU              |
+|Apple A8          |      115 GFLOPS |iPhone6          |
+|PS4               |     1.84 TFLOPS |                 |
+|地球シミュレータ  |    35.86 TFLOPS |初代             |
+|京                |    10.51 PFLOPS |                 |
+|神威太湖之光      |    93.01 PFLOPS |                 |
+
 
 
 ---
@@ -208,7 +213,7 @@ FMA: 積和演算(fused multiply-add)
     3度の読み書き(e.g. c=a*b)で 8 x 3 = 24 octet(byte)
         - B/F値 24以上必要
         - FX10: 0.36 / 24 = 0.015 = 1.5% (つまり 98.5% CPUは遊んでる)
-- 高速化のためには、如何にCPUを有効活用するかがポイント
+- CPUさえ速ければ、コア数さえ多ければ、単純に速いわけではない！
 
 
 ---
@@ -265,7 +270,7 @@ FMA: 積和演算(fused multiply-add)
 ---
 # なぜ並列化が必要なのか
 
-- “The Free Lunch Is Over (フリーランチは終わった)”
+- “The Free Lunch Is Over”
     - http://www.gotw.ca/publications/concurrency-ddj.htm
 
 ![50% center](./CPU.png)
@@ -377,7 +382,7 @@ $$
 
 
 ---
-# Excelシートの使い方
+# 基礎演習でのExcelシートの使い方
 
 
 ---
@@ -620,8 +625,7 @@ int source, int tag, MPI_Comm comm, MPI_Status* status);
     - count: (in) 送信する数
     - datatype: (in) データ型
     - source: (in) 送信元ランク
-    - tag: (in) タグ
-    - comm: (in) コミュニケータ
+    - tag: (in) タグ, comm: (in) コミュニケータ
     - status: (out) ステータス情報
 - 戻り値: MPI_Success(正常)
 
@@ -644,8 +648,7 @@ int dest, int tag, MPI_Comm comm, MPI_Request* request);
     - count: (in) 送信する数
     - datatype: (in) データ型
     - dest: (in) 送信先ランク
-    - tag: (in) タグ
-    - comm: (in) コミュニケータ
+    - tag: (in) タグ, comm: (in) コミュニケータ
     - request: (out) リクエストハンドル
 - 戻り値: MPI_Success(正常)
 
@@ -676,6 +679,22 @@ int source, int tag, MPI_Comm comm, MPI_Request* request);
 ---
 # 主なMPI関数 (通信その他)
 
+## MPI_Barrier
+
+```
+#include <mpi.h>
+
+int MPI_Barrier(MPI_Comm comm);
+```
+
+- 同期をとる
+- パラメータ
+    - comm: (in) コミュニケータ
+
+
+---
+# 主なMPI関数 (通信その他)
+
 ## MPI_Wait
 
 ```
@@ -684,11 +703,25 @@ int source, int tag, MPI_Comm comm, MPI_Request* request);
 int MPI_Wait(MPI_Request* request, MPI_Status* status);
 ```
 
-- 同期待ち処理を行う
+- 変数の通信待ち処理を行う
 - パラメータ
     - request: (in) リクエストハンドル
     - status: (out) 受信状態
 
+
+---
+# 主なMPI関数 (通信その他)
+
+## MPI_Wtime
+
+```
+#include <mpi.h>
+
+double MPI_Wtime();
+```
+
+- ある時刻からの秒数を返す
+- とある処理の両端で計測し、その差分を計算すると経過時間がわかる
 
 ---
 # MPIデータ型
@@ -982,6 +1015,7 @@ for (int i = 0; i < 100; ++i) {
 | omp_get_max_threads() | 実行可能なスレッドの最大数を取得  |
 | omp_get_num_threads() | 実行しているスレッド数を取得      |
 | omp_get_thread_num()  | 実行しているスレッド番号を取得    |
+| omp_get_wtime()       | ある時刻からの秒数を取得 |
 
 
 ---
@@ -1119,12 +1153,12 @@ $ scp [転送元] [転送先]
 
 - ローカルからリモートへ
 ```
-$ scp   ./sample.c  xxxx@reedbush-u.cc.u-tokyo.ac.jp:somewhere
+$ scp ./sample.c  xxxx@reedbush-u.cc.u-tokyo.ac.jp:somewhere
 ```
 
 - リモートからローカルへ
 ```
-$ scp xxxx@reedbush-u.cc.u-tokyo.ac.jp:sample.c   ./somewhere
+$ scp xxxx@reedbush-u.cc.u-tokyo.ac.jp:sample.c ./somewhere
 ```
 
 
