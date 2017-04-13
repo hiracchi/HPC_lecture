@@ -69,7 +69,7 @@
     - BLASなどの行列演算ライブラリを使用しないこと
         - テストに使用することは可
         - サンプルは用意してあります
-- 締切:　2017/05/22(木) (暫定)まで
+- 締切:　2017/05/中旬 (詳しくはwikiを参照)まで
     - スケーラビリティのテスト(excelファイル)も添付のこと
 
 ---
@@ -151,11 +151,11 @@
 ---
 # 様々なCPUのクロックあたりの浮動小数点演算数
 
-```
-SSE: ストリーミングSIMD拡張命令(Streaming SIMD Extensions)
-  SIMD: single instruction multiple data
-FMA: 積和演算(fused multiply-add)
-```
+
+    SSE: ストリーミングSIMD拡張命令(Streaming SIMD Extensions)
+      SIMD: single instruction multiple data
+    FMA: 積和演算(fused multiply-add)
+
 
 
 |CPU                    |                  |備考                    |
@@ -722,6 +722,7 @@ double MPI_Wtime();
 
 - ある時刻からの秒数を返す
 - とある処理の両端で計測し、その差分を計算すると経過時間がわかる
+- OpenMPI 1.10.5, 1.10.6, 2.0.2 は不具合注意
 
 ---
 # MPIデータ型
