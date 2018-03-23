@@ -6,6 +6,11 @@ PANDOC_SRC = presentation.md
 OUT = $(SRC:%.tex=%.pdf)
 PANDOC_OUT = $(PANDOC_SRC:%.md=%.pdf)
 
+BEAMER_THEME = "Berlin"
+#BEAMER_THEME = "lankton-keynote"
+#COLOR_THEME = "dolphin"
+COLOR_THEME = "rose"
+
 default: pandoc
 
 BYPRODUCTS = \
@@ -21,9 +26,15 @@ pandoc:
 	@echo "Compiling $(PANDOC_SRC) to $(PANDOC_OUT)... "
 	@pandoc $(PANDOC_SRC) -t beamer -s -o $(PANDOC_OUT) --smart --normalize \
 	-f markdown+footnotes+implicit_figures \
-	-H h-lualatexja.tex --latex-engine=lualatex --listings \
-	-V theme:Berlin -V colortheme:dolphin -V fonttheme:structurebold \
-	-V classoption:aspectratio=169 --slide-level 2 --highlight-style kate
+	-H h-lualatexja.tex \
+	--latex-engine=lualatex \
+	--listings \
+	-V theme:$(BEAMER_THEME) \
+	-V colortheme:$(COLOR_THEME) \
+	-V fonttheme:structurebold \
+	-V classoption:aspectratio=169 \
+	--slide-level 2 \
+	--highlight-style kate
 	@echo "Done!"
 
 continuous: pandoc
