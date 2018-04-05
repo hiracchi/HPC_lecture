@@ -8,7 +8,7 @@
 # 実践的シミュレーションソフトウェアの開発演習(HPC基礎)
 
 ## 平野 敏行
-## 2017/04/13
+## 2018/04/17
 
 ---
 # はじめに
@@ -45,31 +45,35 @@
 
 
 ---
-# 課題内容
+# 宿題(homework)
 
-- 以下を満たすプログラムを作成しなさい。
+- 以下を満たすプログラムを作成しなさい:
+  Create a program that satisfies the following:
     - バイナリファイルで与えられた行列A, Bの積Cを計算する。
+      The program calculates the product, C, of the matrices A and B given as the binary file.
     - 行列Cを指定されたフォーマットでファイルに出力する。
+      The program output the matrix, C, to a binary file in the specified format.
+      
 
 - 最新情報・ヒントはwikiを参照すること
+  See the wiki for the last information and hints.
     - https://bitbucket.org/hiracchi/2017lecture/wiki/基礎演習課題(行列積)について
-
-- わからないことは何でも聞いてください。
 
 
 ---
-# 注意事項
+# 注意事項(Notes)
 
-- 行列の次元はファイルに記録されている
-    - (コードに決め打ちしないこと)
+- 行列の次元はファイルに記録されているのでハードコーディングしないこと
+  Since the dimension of the matrix is recorded in the file, should not be hard-coded.
 - 倍精度で計算・出力すること
-- 並列計算すること
-    - 短い時間で処理できること
-    - 高い並列化効率を達成すること
+  Use double precision.
+- MPIおよびOpenMPで並列計算すること
+  Use parallel computing by using MPI and OpenMP
     - BLASなどの行列演算ライブラリを使用しないこと
+      NOT use linear algebra packages such as the BLAS.
         - テストに使用することは可
         - サンプルは用意してあります
-- 締切:　2017/05/中旬 (詳しくはwikiを参照)まで
+- dead line:　2018/May/中旬 (wikiを参照; see the wiki pages)
     - スケーラビリティのテスト(excelファイル)も添付のこと
 
 ---
@@ -80,44 +84,44 @@
 
 
 ---
-# HPC概略
+# Outline of the High Performance Computing (HPC)
 
 
 ---
-# スーパーコンピュータ
+# super computer
 
 - 当時の最新技術が搭載された最高性能のコンピュータ
-    - High Performance Computing (高性能計算)
-    - 基本構成(CPU, メモリ, ディスク, OS等)は  
-      パーソナルコンピュータと同じ
+    - 高性能計算: High Performance Computing
+    - 基本構成(CPU, memory, disk, OS etc.)は  
+      PCと同じ
     - 非常に高価
-    - 最近の流行は分散並列型
+    - 最近の流行は分散並列型(distributed memory machine)
     
 ---
-# Reedbush-Uシステム概略
+# Reedbush-U system @UT
 
 - http://www.cc.u-tokyo.ac.jp/system/reedbush/reedbush_intro.html
 
-![fit center](./reedbush_intro.png)
+![fit center](./reedbush_intro3.png)
 
 
 ---
 # Top500 (http://top500.org/) (1/2)
 
-    R_peak: 実効性能値
-    R_max: 理論性能値
+    R_peak: 理論性能値(theorotical maximum performance)
+    R_max: 実効性能値(determine by HPL benchmark)
 
-![80% center](./TOP500_201611_1.png)
+![80% center](./TOP500_201711_1.png)
 
 
 ---
 # Top500 (2/2)
 
-![80% center](./TOP500_201611_2.png)
+![80% center](./TOP500_201711_2.png)
 
 
 ---
-# HPCプログラミング
+# HPC programing
 
 ハードウェアの性能を十分発揮させるために
 
