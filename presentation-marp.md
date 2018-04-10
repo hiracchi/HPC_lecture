@@ -5,47 +5,48 @@
 <!-- *page_number: false -->
 <!-- footer: -->
 
-# 実践的シミュレーションソフトウェアの開発演習(HPC基礎)
+# Seminar for Development of Practical Simulation Softwares (HPC basics)
 
-## 平野 敏行
+## 平野 敏行(Toshiyuki HIRANO)
+## t-hirano [at] iis.u-tokyo.ac.jp
 ## 2018/04/17
 
 ---
-# はじめに
+# Introduction
 
 
 ---
-# 目的
+# Aims
 
-- HPCプログラミングに必要な基礎を身につける
-    - HPCハードウェアの基礎知識
-    - 並列プログラミングの基礎知識
-- 提出課題: 基礎演習
-
-
----
-# 基礎演習 (提出課題)
+- learn basics of the HPC-programing
+    - basics of HPC hardware
+    - basics of prallel programing
+- HOMEWORK(basic excercise)
 
 
 ---
-# 目的
-
-- Linuxシステム・MPI/OpenMPの使い方に慣れる
-    - ファイル・ディレクトリの操作
-    - テキストファイルの作り方・表示
-- C/C++によるプログラミングを習得
-    - ターミナルへの出力方法(printf() etc.)の習得
-    - バイナリファイルの読み書き(fopen(), get() etc.)を習得
-    - 動的なメモリ確保・開放の方法を取得
-    - コンパイル・実行の仕方
-    - Makefileの書き方
-- 並列処理
-    - 簡単なMPI / OpenMPの並列計算の書き方・挙動を習得
-    - 応用演習に備える
+# HOMEWORK
 
 
 ---
-# 宿題(homework)
+# Goals of the homework
+
+- usage of the Linux system and MPI/OpenMP
+    - treat files and directories on the Linux system
+    - edit and display text files
+- C/C++ programing
+    - output datas to terminal
+    - read and write binary files
+    - allocate and release dynamic memories
+    - compile and run
+    - write Makefile
+- parallel processing
+    - MPI/OpenMP
+    - prepare for application exercises
+
+
+---
+# 宿題-基礎演習(homework-basic excercise)
 
 - 以下を満たすプログラムを作成しなさい:
   Create a program that satisfies the following:
@@ -77,10 +78,14 @@
     - スケーラビリティのテスト(excelファイル)も添付のこと
 
 ---
-# 行列ファイルの仕様
+# Spec of matrix file
 
 - 先頭から32bit符号付き整数(int)で行数、列数が順に格納される
-- 倍精度浮動小数点型(double)で(0, 0), (1, 0), (2, 0), … (N-1, 0), (1, 0), …, (N-1, N-1)の順に値が格納される
+The number of rows and columns are sequentially stored with a 32-bit signed integer (int) from the top
+- その後、行列の値が倍精度浮動小数点型(double)で値が格納される
+After that, the matrix elements are stored in double precision floating point type
+    - 行優先(row-oriented)
+    - eg.) (0, 0), (1, 0), (2, 0), … (N-1, 0), (1, 0), …, (N-1, N-1)
 
 
 ---
@@ -94,7 +99,7 @@
     - 高性能計算: High Performance Computing
     - 基本構成(CPU, memory, disk, OS etc.)は  
       PCと同じ
-    - 非常に高価
+    - expensive
     - 最近の流行は分散並列型(distributed memory machine)
     
 ---
@@ -127,21 +132,21 @@
 
 
 ---
-# コンピュータの性能評価
+# HPC performance
 
 ## FLOPS
 - Floating Point Operations Per Second
 - 1秒間に浮動小数点演算(Floating Point Operations)が何回実行できるか
-    - 理論FLOPS = クロック周波数 x コア数 x クロックあたりの浮動小数点演算数
+    - (theoritical) FLOPS = クロック周波数(clocks) x コア数(cores) x クロックあたりの浮動小数点演算数(FLOPS/clocks=op)
     - クロック周波数: 1秒あたりの処理回数
     - 例えば iMac (Intel Core i5 2.8 GHz Quad-core)
         - 2.8 GHz x 4 core x 16 op = 179.2 GFLOPS
 
 ---
-# 浮動小数点数
+# 浮動小数点数(Floating Point)
 
-- コンピュータの数値表現
-  - 主に IEEE 754 方式
+- Numeric expression in computer
+  - IEEE 754
 - 種類
 
 |       | 情報量 (bit)       |備考                        |
@@ -154,7 +159,6 @@
 
 ---
 # 様々なCPUのクロックあたりの浮動小数点演算数
-
 
     SSE: ストリーミングSIMD拡張命令(Streaming SIMD Extensions)
       SIMD: single instruction multiple data
@@ -183,25 +187,25 @@
 |Pentium (300 MHz) |      300 MFLOPS |CPU              |
 |Apple A8          |      115 GFLOPS |iPhone6          |
 |PS4               |     1.84 TFLOPS |                 |
-|地球シミュレータ  |    35.86 TFLOPS |初代             |
+|地球シミュレータ    |    35.86 TFLOPS |初代             |
 |京                |    10.51 PFLOPS |                 |
-|神威太湖之光      |    93.01 PFLOPS |                 |
+|神威太湖之光        |    93.01 PFLOPS |                 |
 
 
 
 ---
-# メモリバンド幅
+# Memory Bandwidth
 
 - 単位時間あたりに転送できるデータ量
-    - 理論バンド幅 = DRAMクロック周波数 x 1クロックあたりのデータ転送回数  
-    x メモリバンド幅 (8 byte) x CPUメモリチャンネル数
-        - DDR3-1600なら  
+    - 理論バンド幅 = DRAMクロック周波数(clock) x 1クロックあたりのデータ転送回数(cycle) x メモリバンド幅 (bandwidth: 8 byte) x CPUメモリチャンネル数 (channels)
+        - DDR3-1600:
         (DRAMクロック周波数 x 1クロックあたりのデータ転送回数) = 1600
     - iMac (Intel Core i5-5575R, DDR3)
         - 1867 MHz x 8 x 2 = 29872 MB/s = 29.9 GB/s
 	- Reedbush 1node (DDR4-2400) 153.6 GB/s
     - 計算ノード間(Reedbush-U; InfiniBand EDR 4x): 100 Gbps = (100/8) GB/s = 12.5 GB/s
 - 単純な計算を大量に行う場合は、メモリバンド幅が性能を決める
+When performing simple calculations in large quantities, the memory bandwidth determines the performance.
 
 
 ---
@@ -221,54 +225,55 @@
 
 
 ---
-# 階層メモリ構造
+# 階層メモリ構造(Hierarchical memory structure)
 
 |名称                 |記憶容量|アクセス速度(遅延)|転送速度(帯域)|
 |:--------------------|-------:|-----------------:|-------------:|
-|レジスタ (on CPU)    |   byte |                ns|         GB/s |
-|キャッシュ  (on CPU) |kB ~ MB |             10 ns|         GB/s |
-|(メイン)メモリ       |MG ~ GB |            100 ns|      100 MB/s|
-|ハードディスク       |GB ~ TB |             10 ms|      100 MB/s|
+|レジスタ register (on CPU)    |   byte |                ns|         GB/s |
+|キャッシュ cache  (on CPU) |kB ~ MB |             10 ns|         GB/s |
+|(メイン)メモリ memory      |MG ~ GB |            100 ns|      100 MB/s|
+|ハードディスク HDD      |GB ~ TB |             10 ms|      100 MB/s|
 
 - キャッシュを効率的に使わないと遅い
+It is slow if you do not use cash efficiently
 
 
 ---
-# データ格納構造
+# メモリ上のデータ格納構造: data structure in memory
 
-- データはまとまって取り扱われる(=キャッシュライン)
+- データはまとまって取り扱われる(=cache line)
     - 連続したデータは近く(キャッシュ内)に存在する確率が高い
-        - キャッシュヒット
-    - 不連続データアクセスはキャッシュミスを引き起こしやすい
-- (C/C++言語の)1次元配列は連続データ
+        - cache hit
+    - 不連続データアクセスはcache missを引き起こしやすい
+- (C/C++言語)One dimensional array is continuous data
     - うまく活用することで高速化が期待できる
 
 
 ---
-# 行列積でのメモリアクセス
+# memory access in matrix-matrix multiplication
 
 ![80% center](./行列メモリアクセス.png)
 
 
 ---
-# 単体チューニング
+# Performance Tuning (Single Process) 
 
 - CPUへ如何にうまくデータを送り込ませるかがポイント
-- 転送量 < 演算量 の場合
+- 転送量(transfer) < 演算量(computing) の場合
     - データを使いまわして高速化 → ブロック化
-    - 例： 行列積
-        - データ量 $N^2$
-        - 演算量 $N^3$
-- 転送量 > 演算量 の場合
+    - eg.) matrix-matrix multiplication
+        - data: $N^2$
+        - computation $N^3$
+- 転送量(transfer) > 演算量(computing) の場合
     - 高速化は難しい
         - 余計に計算する(メモリ転送量を減らす)ことも一考
-    - 例： 行列とベクトルの積
-    - 例： ハウスホルダー三重対角化
+    - eg.) matrix-vector multiplication
+    - eg.) House holder triple diagonalization
         - 行列-ベクトル積が必要 → 帯行列にする
 
 
 ---
-# 並列化プログラミング
+# parallel computing
 
 
 ---
@@ -281,13 +286,16 @@
 
 
 ---
-# フリーランチは終わった
+# The Free Lunch Is Over
 
-+ クロックが上がるとソフトウェアのパフォーマンスも勝手に向上
-+ クロック上昇の限界
-+ CPUを複数使用するしかない
-+ 並列処理のプログラムを書かねばパフォーマンスが上がらず
-
+1. クロックが上がるとソフトウェアのパフォーマンスも勝手に向上
+Improve software performance arbitrarily as clock rises
+1. クロック上昇の限界
+Limit of clock rise
+1. CPUを複数使用するしかない
+Only have to use multiple CPUs
+1. 並列処理のプログラムを書かねばパフォーマンスが上がらず
+Performance does not rise unless you write a parallel processing program!
 
 ---
 # 並列化プログラミングの心構え
@@ -305,7 +313,7 @@
 ---
 # (並列)性能評価指標 (1/4)
 
-## 台数効果(高速化率)
+## 台数効果 Number Effect (高速化率 Acceleration rate)
 
 $$
 S_P = \frac{T_S}{T_P}
@@ -322,7 +330,7 @@ $$
 ---
 # (並列)性能評価指標 (2/4)
 
-## 並列化効率
+## 並列化効率 Parallelization efficiency
 
 $$
 E_P = \frac{S_P}{P} \times 100  
@@ -334,7 +342,7 @@ $$
 ---
 # (並列)性能評価指標 (3/4)
 
-## アムダールの法則
+## アムダールの法則 Amdahl's law
 
 - 1台での実行時間$T_S$のうち、並列化ができる割合(並列化率)を$a$とすると、
 $P$台での並列実行時間$T_P$は
@@ -348,7 +356,6 @@ S_P = \frac{T_S}{T_P} = \frac{1}{(a / P +(1- a))}
 $$
 
 - 無限台使っても(P→∞), 台数効果は$1/(1-a)$しか出ない
-    - → アムダールの法則
 
 
 ---
@@ -364,7 +371,7 @@ $$
 
 
 ---
-# 並列化ではやくなる処理・はやくならない処理
+# Processing that becomes faster by parallelization / that does not get faster
 
 - "並列化出来る処理"と"頑張っても並列化できない処理"とがある
 
@@ -374,11 +381,11 @@ $$
 ---
 # スケーラビリティ(並列性能向上)の評価
 
-## ストロング・スケーリング
+## Strong Scaling
   - 問題規模は一定
   - プロセス数を増加
   - 並列数が多くなると達成は困難 (cf. アムダールの法則)
-## ウィーク・スケーリング
+## Weak Scaling
   - 1プロセスあたりの問題規模を一定
   - プロセス数を増加
 
@@ -390,15 +397,15 @@ $$
 
 
 ---
-# プロセスとスレッド
+# Process and Threads
 
-- プロセス
+- Process
     - OSから独立したリソースを割り当てられる
         - CPU
         - メモリ空間
     - 1つ以上のスレッドを持つ
-      - 親(プロセス) - 子(スレッド)
-- スレッド
+      - 親(process) - 子(thread)
+- Thread
     - 実行単位
     - 各スレッドはプロセス内メモリを共有する
 
@@ -406,13 +413,13 @@ $$
 ---
 # 並列プログラミングの仕組みと方法
 
-# マルチプロセス
+# Multi-process
   - プロセス間でデータのやりとりをする仕組み
   - プロセス間でメモリ空間は(基本的には)共有できない
   - 別の計算機上にあるプロセスとも通信できる
   - MPI(Message Passing Interface)
 
-# マルチスレッド
+# Multi-threads
   - プロセス内部で複数スレッドが並列動作
   - プロセスのメモリ空間を複数スレッドで共有できる
   - 排他処理が必要
@@ -1015,23 +1022,25 @@ for (int i = 0; i < 100; ++i) {
 ```
 
 |関数名                 |内容                               |
-|:----------------------|:----------------------------------|
-| omp_get_num_procs()   | プロセッサの数を返す              |
-| omp_get_max_threads() | 実行可能なスレッドの最大数を取得  |
-| omp_get_num_threads() | 実行しているスレッド数を取得      |
-| omp_get_thread_num()  | 実行しているスレッド番号を取得    |
-| omp_get_wtime()       | ある時刻からの秒数を取得 |
+|:----------------------|:--------------------------------|
+| omp_get_num_procs()   | プロセッサの数を返す                |
+| omp_get_max_threads() | 実行可能なスレッドの最大数を取得      |
+| omp_get_num_threads() | 実行しているスレッド数を取得          |
+| omp_get_thread_num()  | 実行しているスレッド番号を取得        |
+| omp_get_wtime()       | ある時刻からの秒数を取得            |
 
 
 ---
 # OpenMP 注意点
 
-- ビルド時は多くの場合コンパイルオプションが必要
-    - gnu compiler
+ビルド時は多くの場合コンパイルオプションが必要
+- gnu compiler
+
 ```bash
-$ gcc –fopenmp
+$ gcc -fopenmp
 ```
-    - intel compiler
+
+- intel compiler
 ```bash
 $ icpc –openmp
 ```
@@ -1052,8 +1061,8 @@ $ icpc –openmp
 - ノード内のメモリが共有できない(プロセスあたりのメモリ量が少ない)
 - MPIのコードだけを書けばよい
 
-## ハイブリッド並列
-- ノード間はMPI ノード内はOpenMP
+## Hybrid
+- ノード間はMPI / ノード内はOpenMP
 - ノード内メモリをプロセスが占有できる
 - 2種類の並列コードを書かないといけない
 
@@ -1063,7 +1072,7 @@ $ icpc –openmp
 
 ## MPI
 
-- RIST 青山幸也 著 https://www.hpci-office.jp/pages/seminar_text
+- 青山幸也 著, MPI虎の巻, http://www.hpci-office.jp/invite2/documents2/mpi-all_20160801.pdf
 - P.パチェコ 著, MPI並列プログラミング ISBN-13: 978-4563015442
 - 片桐孝洋 著, スパコンプログラミング入門: 並列処理とMPIの学習 ISBN-13: 978-4130624534
 
@@ -1126,7 +1135,7 @@ $ ssh-keygen -t rsa
     + 以下のURLを入力する
         - https://reedbush-www.cc.u-tokyo.ac.jp/
     + アカウントとパスワードを入力する
-        - パスワードはそのものではなく、表示されている文字列の奇数番目を繋ぎ合わせたもの
+        - パスワードはそのものではなく、表示されている文字列の**奇数**番目を繋ぎ合わせたもの
      + 公開鍵を登録する
 
 
