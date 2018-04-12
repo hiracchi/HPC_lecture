@@ -8,7 +8,6 @@
 # Seminar for Development of Practical Simulation Softwares (HPC basics)
 
 ## 平野 敏行(Toshiyuki HIRANO)
-## t-hirano [at] iis.u-tokyo.ac.jp
 ## 2018/04/17
 
 ---
@@ -25,11 +24,11 @@
 
 
 ---
-# HOMEWORK
+# HOMEWORK(basic excercise)
 
 
 ---
-# Goals of the homework
+# Goals of the basic excercise
 
 - usage of the Linux system and MPI/OpenMP
     - treat files and directories on the Linux system
@@ -46,7 +45,7 @@
 
 
 ---
-# 宿題-基礎演習(homework-basic excercise)
+# 宿題-基礎演習(Homework; Basic excercise)
 
 - 以下を満たすプログラムを作成しなさい:
   Create a program that satisfies the following:
@@ -58,7 +57,8 @@
 
 - 最新情報・ヒントはwikiを参照すること
   See the wiki for the last information and hints.
-    - https://bitbucket.org/hiracchi/2017lecture/wiki/基礎演習課題(行列積)について
+    - https://gitlab.com/ut-sdpss/2018-lecture/wikis/基礎演習課題
+    - https://gitlab.com/ut-sdpss/2018-lecture/wikis/BasicExercise
 
 
 ---
@@ -95,11 +95,11 @@ After that, the matrix elements are stored in double precision floating point ty
 ---
 # super computer
 
-- 当時の最新技術が搭載された最高性能のコンピュータ
+- 最新技術が搭載された最高性能のコンピュータ
+  The highest performance computer equipped with the latest technology
     - 高性能計算: High Performance Computing
-    - 基本構成(CPU, memory, disk, OS etc.)は  
-      PCと同じ
-    - expensive
+    - 基本構成(CPU, memory, disk, OS etc.)はPCと同じ
+    - 高価: expensive
     - 最近の流行は分散並列型(distributed memory machine)
     
 ---
@@ -300,15 +300,16 @@ Performance does not rise unless you write a parallel processing program!
 ---
 # 並列化プログラミングの心構え
 
-- 本当に並列化が必要か
+- 本当に並列化が必要か Is it really necessary to parallelize?
     - まずは単体動作でのチューニングをすべき
-    - そもそも単体動作で正しく動くことを確認すること
-- どこを並列化すべきか
-    - パレートの法則(80:20の法則)
+      First we should tune on standalone operation
+- どこを並列化すべきか Where should we parallelize?
+    - Pareto principle (80:20の法則)
     - プロファイラ等を使い、どの関数・ループが処理に時間がかかるかを見つける
-    - 思い込みは禁物
+      Using a profiler, find out which function or loop takes time to process
+    - 思い込みは禁物 Never imagined
 - 並列化したらなんでも速くなると思ったら大間違い
-
+  Will your program become faster if you parallelize? No, it's a big mistake!
 
 ---
 # (並列)性能評価指標 (1/4)
@@ -394,6 +395,7 @@ $$
 
 ---
 # 基礎演習でのExcelシートの使い方
+  How to use the excel sheets in the basic excercise
 
 
 ---
@@ -401,88 +403,108 @@ $$
 
 - Process
     - OSから独立したリソースを割り当てられる
+      The independent computer resource is assigned by the OS 
         - CPU
-        - メモリ空間
+        - メモリ空間; Memory space
     - 1つ以上のスレッドを持つ
-      - 親(process) - 子(thread)
+      Process has one and more threads 
 - Thread
-    - 実行単位
+    - 実行単位; execution unit
     - 各スレッドはプロセス内メモリを共有する
-
+      Each thread shares the process memory
+- see
+    - Activity Monitor (@MacOS)
+    - top (@UNIX)
 
 ---
-# 並列プログラミングの仕組みと方法
+# 並列プログラミングの方法1- Method of parallel programming
 
-# Multi-process
+## Multi-process
   - プロセス間でデータのやりとりをする仕組み
+    Data is exchanged between processes
   - プロセス間でメモリ空間は(基本的には)共有できない
+    Memory space can not be shared between processes
   - 別の計算機上にあるプロセスとも通信できる
-  - MPI(Message Passing Interface)
+    It can also communicate with processes on another computer
+  - eg.) MPI(Message Passing Interface)
 
-# Multi-threads
+---
+
+# 並列プログラミングの方法2 - Method of parallel programming
+
+## Multi-threads
   - プロセス内部で複数スレッドが並列動作
+    Multiple threads operate in parallel within the process
   - プロセスのメモリ空間を複数スレッドで共有できる
+    Memory space can be shared between threads in the process
   - 排他処理が必要
+    Exclusive processing required 
   - 同一システム上でしか動作しない
-  - pthread(POSIX thread), OpenMP
+    It works only on the same system
+  - eg.) pthread(POSIX thread), OpenMP
 
 
 ---
-# MPIの特徴
+# MPIの特徴 Features of MPI
 
-- ライブラリ規格の一つ
+- ライブラリ規格の一つ One of the library standards
     - プログラミング言語、コンパイラに依存しない
+      It is independent of programming language and compiler
     - API(Application Programing Interface)を標準化
     - 実装がまちまち
-- 大規模計算が可能
-    - ネットワークを介したプロセス間通信が可能
-- プログラミングの自由度が高い
-    - 通信処理をプログラミングすることで最適化が可能
+- 大規模計算が可能 Large scale calculation is possible
+    - 高速ネットワークを介したプロセス間通信が可能 
+      Enable interprocess communication via high-speed network
+- プログラミングの自由度が高い Free parallel comunication programing
+    - 通信処理を自由にプログラミングすることで最適化が可能
+      Optimize by freely programming communication processing
     - 裏を返せばプログラミングが大変
 
 
 ---
-# MPIの実装
+# MPIの実装 Implementation
 
 - MPICH
     - Argonne National Laboratoryで開発
     - MPICH1, MPICH2など
 - OpenMPI
-    - オープンソース
+    - Open-source
     - 最近のLinuxディストリビューションで採用されつつある
-- ベンダー製MPI
-    - 計算機用に最適化されたMPI
+- MPI presented by the vender
+    - optimized MPI by the vender 
     - MPICH2がベースが多い
 
 
 ---
-# MPIプログラミングの作法
+# MPIプログラミングの作法 Rules
 
-+ 初期化
++ Initialize
   - 使う資源(リソース)を確保・準備する
-  - すべてのプロセスが呼び出す必要がある
+  - All processes need to call
   - MPI_Init()関数
-+ 後始末
++ Finalize
   - 使った資源(リソース)を返す
   - 返さないとゾンビ(ずっと居残るプロセス)になる場合も
-  - すべてのプロセスが呼び出す必要がある
+  - All processes need to call
   - MPI_Finalize()関数
 
 
 ---
-# MPI関数の性質
+# MPI関数の性質 Characters
 
-## 通信
-- 集団通信
+## 通信 Communication
+- 集団通信 Collective communication
   - 全プロセスが通信に参加
-    - 全プロセスが呼ばなければ止まる
-  - 1対1通信
-    - 通信に関与するプロセスのみが関数を呼ぶ
-- ブロッキング
-    - ブロッキング通信
-        - 通信が完了するまで次の処理を待つ
-    - ノンブロッキング通信
-        - 通信しながら別の処理が可能
+  - 全プロセスが呼ばなければ止まる
+- 1対1通信
+  - 通信に関与するプロセスのみが関数を呼ぶ
+## Blocking / non-Blocking
+- Blocking
+  - 通信が完了するまで次の処理を待つ
+    Wait for next processing until communication is completed
+- non-Blocking
+  - 通信しながら別の処理が可能
+    Different processing is possible while communicating
 
 
 ---
@@ -1015,13 +1037,13 @@ for (int i = 0; i < 100; ++i) {
 ---
 ## OpenMP ライブラリ関数
     
-- omp.hをインクルードすること
+- don't forget include <omp.h>
 
 ```
 #include <omp.h>
 ```
 
-|関数名                 |内容                               |
+|functions              |  processing                     |
 |:----------------------|:--------------------------------|
 | omp_get_num_procs()   | プロセッサの数を返す                |
 | omp_get_max_threads() | 実行可能なスレッドの最大数を取得      |
@@ -1083,16 +1105,15 @@ $ icpc –openmp
 
 
 ---
-# 演習環境の構築
+# 演習環境の構築 Setup your working environment
 
 
 ---
 # 概要
 
-+ ECCSのマシン(iMac)にログインする
-+ ターミナルを起動する
-    - コンソール画面が表示される
-+ sshでスーパーコンピュータシステムにログインする
++ log in the ECCS machine (iMac)
++ open a terminal
++ login to the super-computer system by using ssh
 
 - 2つのアカウント (ECCSとスパコン) の違いに注意!
 
@@ -1109,83 +1130,86 @@ $ icpc –openmp
 
 
 ---
-# ssh鍵の作成
+# making ssh-key
 
-+ ターミナルを起動する
-+ ssh-keygenを実行する
++ open a terminal
++ run ssh-keygen
 ```bash
 $ ssh-keygen -t rsa
 ```
 
-- 出来るファイル
+- created files
   - `$HOME/.ssh/id_rsa`
-    - 秘密鍵
-    - 誰にも見せないこと
-    - メール等で送らないこと
+    - the secret key
+    - 誰にも見せないこと DONOT show to anyone
+    - メール等で送らないこと DONOT e-maile 
   - `$HOME/.ssh/id_rsa.pub`
-    - 公開鍵(見られてもOK)
+    - public key (見られてもOK)
 
 
 ---
-# ssh公開鍵の登録
+# register the public ssh key
 
-- 詳しくは http://www.cc.u-tokyo.ac.jp/system/reedbush/QuickStartGuide.pdf
-- 手順
-    + webブラウザ(safari)を立ち上げる
-    + 以下のURLを入力する
+- see http://www.cc.u-tokyo.ac.jp/system/reedbush/QuickStartGuide.pdf
+- procedure
+    + open your web browser (eg. safari)
+    + open the following URL
         - https://reedbush-www.cc.u-tokyo.ac.jp/
-    + アカウントとパスワードを入力する
+    + submit your account and password
         - パスワードはそのものではなく、表示されている文字列の**奇数**番目を繋ぎ合わせたもの
-     + 公開鍵を登録する
+        - The password is not itself, but stitched odd numbers of characters
+     + submit your public ssh key
 
 
 ---
-# スーパーコンピュータシステムへのログイン
+# login to the super computer
 
-- ターミナルから以下を入力
+- type in your terminal 
 
 ```bash
-$ ssh [スパコンのアカウント名]@reedbush-u.cc.u-tokyo.ac.jp
+$ ssh <supercomputer account>@reedbush-u.cc.u-tokyo.ac.jp
 ```
 
 - パスフレーズが聞かれた場合は、設定したパスフレーズを入れる
-- 成功するとログインできる
+  When a passphrase is asked, put the passphrase that you set
 
 
 ---
-# ファイル転送 (scp)
+# transmit files (scp)
 
 ```bash
-$ scp [転送元] [転送先]
+$ scp <from> <to>
 ```
 
 - cp コマンドと同様の使い方 (第４文型: SVOO)
     - -r オプションで(サブ)ディレクトリも一緒に
-- 場所(ファイル)の指定方法
-    - [[サーバーアカウント@]サーバー名:]ディレクトリ.../ファイル名
+- How to specify the location (filepath)
+    - [[account@]server:]directory.../filename
     - サーバー名を省略した場合はローカルマシンが想定
+      If the server name is omitted, the local machine is assumed
 
-- ローカルからリモートへ
+- from local machie to remote
 ```
 $ scp ./sample.c  xxxx@reedbush-u.cc.u-tokyo.ac.jp:somewhere
 ```
 
-- リモートからローカルへ
+- from remote machine to local
 ```
 $ scp xxxx@reedbush-u.cc.u-tokyo.ac.jp:sample.c ./somewhere
 ```
 
 
 ---
-# バッチシステムでの実行方法
+# How to use batch system
 
 多くのスパコンではインタラクティブな実行はせず、バッチ処理を行う
+In many supercomputers, do NOT execute interactive, but do batch processing
 
-- 使い方
+- usage
 
-|内容                 | コマンド             |
-|---------------------|----------------------|
-|ジョブの投入         | qsub "スクリプト"    |
-|状況確認             | rbstat               |
-|ジョブの削除         | qdel "ジョブID"      |
+|内容                        | コマンド              |
+|---------------------------|----------------------|
+|ジョブの投入 submit job      | qsub \<script>        |
+|状況確認 check your jobs     | rbstat               |
+|ジョブの削除 delete your jobs | qdel \<job ID>       |
 
