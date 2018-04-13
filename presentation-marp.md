@@ -809,7 +809,6 @@ int main(int argc, char *argv[])
 }
 ```
 
-
 ---
 # MPIプログラミングのコツ
 
@@ -827,7 +826,7 @@ int main(int argc, char *argv[])
 
 
 ---
-# MPI補足
+# comments for MPI
 
 - MPIもソフトウェア
     - バグは少なからずある
@@ -839,6 +838,20 @@ int main(int argc, char *argv[])
 - 非同期通信が必ずしも良いとは限らない
     - デバッグ作業は格段に難しくなる
     - MPI_Test(), MPI_Wait()が呼ばれて初めて通信を開始する実装がある
+
+---
+# MPI Appendix
+
+## 派生データ型
+- 構造体を通信したいときに、オリジナルのデータ型を作成できる
+  - MPI_Type_create_struct (MPI_Type_struct)
+  - MPI_Type_Commit
+
+## MPI I/O
+- 巨大なファイルを各プロセスが同時に読み書きする仕組み
+  - MPI_File_open, MPI_File_close
+  - MPI_File_set_view
+  - MPI_File_write_all
 
 
 ---
