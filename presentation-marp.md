@@ -7,7 +7,8 @@
 
 # Seminar for Development of Practical Simulation Softwares (HPC basics)
 
-## 平野 敏行(Toshiyuki HIRANO)
+## 平野 敏行
+##(Toshiyuki HIRANO; `t-hirano [at] iis.u-tokyo.ac.jp`)
 ## 2018/04/17
 
 ---
@@ -113,7 +114,7 @@ After that, the matrix elements are stored in double precision floating point ty
 ---
 # Top500 (http://top500.org/) (1/2)
 
-    R_peak: 理論性能値(theorotical maximum performance)
+    R_peak: 理論性能値(theorotical maximum performance; calculated)
     R_max: 実効性能値(determine by HPL benchmark)
 
 ![80% center](./TOP500_201711_1.png)
@@ -124,6 +125,14 @@ After that, the matrix elements are stored in double precision floating point ty
 
 ![80% center](./TOP500_201711_2.png)
 
+
+---
+# LinuxがスパコンTOP500でOSシェア100％に
+
+- https://www.zdnet.com/article/linux-totally-dominates-supercomputers/
+- https://japan.zdnet.com/article/35110755/
+
+![25% center](./TOP500_201711_linux.png)
 
 ---
 # HPC programing
@@ -229,10 +238,10 @@ When performing simple calculations in large quantities, the memory bandwidth de
 
 |名称                 |記憶容量|アクセス速度(遅延)|転送速度(帯域)|
 |:--------------------|-------:|-----------------:|-------------:|
-|レジスタ register (on CPU)    |   byte |                ns|         GB/s |
+|レジスタ register (on CPU) |   byte |                ns|         GB/s |
 |キャッシュ cache  (on CPU) |kB ~ MB |             10 ns|         GB/s |
 |(メイン)メモリ memory      |MG ~ GB |            100 ns|      100 MB/s|
-|ハードディスク HDD      |GB ~ TB |             10 ms|      100 MB/s|
+|ハードディスク HDD         |GB ~ TB |             10 ms|      100 MB/s|
 
 - キャッシュを効率的に使わないと遅い
 It is slow if you do not use cash efficiently
