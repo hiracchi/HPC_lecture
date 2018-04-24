@@ -5,139 +5,157 @@
 <!-- *page_number: false -->
 <!-- footer: -->
 
-# 実践的シミュレーションソフトウェアの開発演習(HPC基礎)
+# Seminar for Development of Practical Simulation Softwares (HPC basics)
 
 ## 平野 敏行
-## 2017/04/13
+##(Toshiyuki HIRANO; `t-hirano [at] iis.u-tokyo.ac.jp`)
+## 2018/04/17
 
 ---
-# はじめに
-
-
----
-# 目的
-
-- HPCプログラミングに必要な基礎を身につける
-    - HPCハードウェアの基礎知識
-    - 並列プログラミングの基礎知識
-- 提出課題: 基礎演習
+# Introduction
 
 
 ---
-# 基礎演習 (提出課題)
+# Aims
+
+- learn basics of the HPC-programing
+    - basics of HPC hardware
+    - basics of prallel programing
+- HOMEWORK(basic excercise)
 
 
 ---
-# 目的
-
-- Linuxシステム・MPI/OpenMPの使い方に慣れる
-    - ファイル・ディレクトリの操作
-    - テキストファイルの作り方・表示
-- C/C++によるプログラミングを習得
-    - ターミナルへの出力方法(printf() etc.)の習得
-    - バイナリファイルの読み書き(fopen(), get() etc.)を習得
-    - 動的なメモリ確保・開放の方法を取得
-    - コンパイル・実行の仕方
-    - Makefileの書き方
-- 並列処理
-    - 簡単なMPI / OpenMPの並列計算の書き方・挙動を習得
-    - 応用演習に備える
+# HOMEWORK(basic excercise)
 
 
 ---
-# 課題内容
+# Goals of the basic excercise
 
-- 以下を満たすプログラムを作成しなさい。
+- usage of the Linux system and MPI/OpenMP
+    - treat files and directories on the Linux system
+    - edit and display text files
+- C/C++ programing
+    - output datas to terminal
+    - read and write binary files
+    - allocate and release dynamic memories
+    - compile and run
+    - write Makefile
+- parallel processing
+    - MPI/OpenMP
+    - prepare for application exercises
+
+
+---
+# 宿題-基礎演習(Homework; Basic excercise)
+
+- 以下を満たすプログラムを作成しなさい:
+  Create a program that satisfies the following:
     - バイナリファイルで与えられた行列A, Bの積Cを計算する。
+      The program calculates the product, C, of the matrices A and B given as the binary file.
     - 行列Cを指定されたフォーマットでファイルに出力する。
+      The program output the matrix, C, to a binary file in the specified format.
+      
 
 - 最新情報・ヒントはwikiを参照すること
-    - https://bitbucket.org/hiracchi/2017lecture/wiki/基礎演習課題(行列積)について
-
-- わからないことは何でも聞いてください。
+  See the wiki for the last information and hints.
+    - https://gitlab.com/ut-sdpss/2018-lecture/wikis/基礎演習課題
+    - https://gitlab.com/ut-sdpss/2018-lecture/wikis/BasicExercise
 
 
 ---
-# 注意事項
+# 注意事項(Notes)
 
-- 行列の次元はファイルに記録されている
-    - (コードに決め打ちしないこと)
+- 行列の次元はファイルに記録されているのでハードコーディングしないこと
+  Since the dimension of the matrix is recorded in the file, should not be hard-coded.
 - 倍精度で計算・出力すること
-- 並列計算すること
-    - 短い時間で処理できること
-    - 高い並列化効率を達成すること
+  Use double precision.
+- MPIおよびOpenMPで並列計算すること
+  Use parallel computing by using MPI and OpenMP
     - BLASなどの行列演算ライブラリを使用しないこと
+      NOT use linear algebra packages such as the BLAS.
         - テストに使用することは可
         - サンプルは用意してあります
-- 締切:　2017/05/中旬 (詳しくはwikiを参照)まで
+- dead line:　2018/May/中旬 (wikiを参照; see the wiki pages)
     - スケーラビリティのテスト(excelファイル)も添付のこと
 
 ---
-# 行列ファイルの仕様
+# Spec of matrix file
 
 - 先頭から32bit符号付き整数(int)で行数、列数が順に格納される
-- 倍精度浮動小数点型(double)で(0, 0), (1, 0), (2, 0), … (N-1, 0), (1, 0), …, (N-1, N-1)の順に値が格納される
+The number of rows and columns are sequentially stored with a 32-bit signed integer (int) from the top
+- その後、行列の値が倍精度浮動小数点型(double)で値が格納される
+After that, the matrix elements are stored in double precision floating point type
+    - 行優先(row-oriented)
+    - eg.) (0, 0), (1, 0), (2, 0), … (N-1, 0), (1, 0), …, (N-1, N-1)
 
 
 ---
-# HPC概略
+# Outline of the High Performance Computing (HPC)
 
 
 ---
-# スーパーコンピュータ
+# super computer
 
-- 当時の最新技術が搭載された最高性能のコンピュータ
-    - High Performance Computing (高性能計算)
-    - 基本構成(CPU, メモリ, ディスク, OS等)は  
-      パーソナルコンピュータと同じ
-    - 非常に高価
-    - 最近の流行は分散並列型
+- 最新技術が搭載された最高性能のコンピュータ
+  The highest performance computer equipped with the latest technology
+    - 高性能計算: High Performance Computing
+    - 基本構成(CPU, memory, disk, OS etc.)はPCと同じ
+    - 高価: expensive
+    - 最近の流行は分散並列型(distributed memory machine)
     
 ---
-# Reedbush-Uシステム概略
+# Reedbush-U system @UT
 
 - http://www.cc.u-tokyo.ac.jp/system/reedbush/reedbush_intro.html
 
-![fit center](./reedbush_intro.png)
+![fit center](./reedbush_intro3.png)
 
 
 ---
 # Top500 (http://top500.org/) (1/2)
 
-    R_peak: 実効性能値
-    R_max: 理論性能値
+    R_peak: 理論性能値(theorotical maximum performance; calculated)
+    R_max: 実効性能値(determine by HPL benchmark)
 
-![80% center](./TOP500_201611_1.png)
+![80% center](./TOP500_201711_1.png)
 
 
 ---
 # Top500 (2/2)
 
-![80% center](./TOP500_201611_2.png)
+![80% center](./TOP500_201711_2.png)
 
 
 ---
-# HPCプログラミング
+# LinuxがスパコンTOP500でOSシェア100％に
+
+- https://www.zdnet.com/article/linux-totally-dominates-supercomputers/
+- https://japan.zdnet.com/article/35110755/
+
+![25% center](./TOP500_201711_linux.png)
+
+---
+# HPC programing
 
 ハードウェアの性能を十分発揮させるために
 
 
 ---
-# コンピュータの性能評価
+# HPC performance
 
 ## FLOPS
 - Floating Point Operations Per Second
 - 1秒間に浮動小数点演算(Floating Point Operations)が何回実行できるか
-    - 理論FLOPS = クロック周波数 x コア数 x クロックあたりの浮動小数点演算数
+    - (theoritical) FLOPS = クロック周波数(clocks) x コア数(cores) x クロックあたりの浮動小数点演算数(FLOPS/clocks=op)
     - クロック周波数: 1秒あたりの処理回数
     - 例えば iMac (Intel Core i5 2.8 GHz Quad-core)
         - 2.8 GHz x 4 core x 16 op = 179.2 GFLOPS
 
 ---
-# 浮動小数点数
+# 浮動小数点数(Floating Point)
 
-- コンピュータの数値表現
-  - 主に IEEE 754 方式
+- Numeric expression in computer
+  - IEEE 754
 - 種類
 
 |       | 情報量 (bit)       |備考                        |
@@ -150,7 +168,6 @@
 
 ---
 # 様々なCPUのクロックあたりの浮動小数点演算数
-
 
     SSE: ストリーミングSIMD拡張命令(Streaming SIMD Extensions)
       SIMD: single instruction multiple data
@@ -179,25 +196,25 @@
 |Pentium (300 MHz) |      300 MFLOPS |CPU              |
 |Apple A8          |      115 GFLOPS |iPhone6          |
 |PS4               |     1.84 TFLOPS |                 |
-|地球シミュレータ  |    35.86 TFLOPS |初代             |
+|地球シミュレータ    |    35.86 TFLOPS |初代             |
 |京                |    10.51 PFLOPS |                 |
-|神威太湖之光      |    93.01 PFLOPS |                 |
+|神威太湖之光        |    93.01 PFLOPS |                 |
 
 
 
 ---
-# メモリバンド幅
+# Memory Bandwidth
 
 - 単位時間あたりに転送できるデータ量
-    - 理論バンド幅 = DRAMクロック周波数 x 1クロックあたりのデータ転送回数  
-    x メモリバンド幅 (8 byte) x CPUメモリチャンネル数
-        - DDR3-1600なら  
+    - 理論バンド幅 = DRAMクロック周波数(clock) x 1クロックあたりのデータ転送回数(cycle) x メモリバンド幅 (bandwidth: 8 byte) x CPUメモリチャンネル数 (channels)
+        - DDR3-1600:
         (DRAMクロック周波数 x 1クロックあたりのデータ転送回数) = 1600
     - iMac (Intel Core i5-5575R, DDR3)
         - 1867 MHz x 8 x 2 = 29872 MB/s = 29.9 GB/s
 	- Reedbush 1node (DDR4-2400) 153.6 GB/s
     - 計算ノード間(Reedbush-U; InfiniBand EDR 4x): 100 Gbps = (100/8) GB/s = 12.5 GB/s
 - 単純な計算を大量に行う場合は、メモリバンド幅が性能を決める
+When performing simple calculations in large quantities, the memory bandwidth determines the performance.
 
 
 ---
@@ -217,54 +234,55 @@
 
 
 ---
-# 階層メモリ構造
+# 階層メモリ構造(Hierarchical memory structure)
 
 |名称                 |記憶容量|アクセス速度(遅延)|転送速度(帯域)|
 |:--------------------|-------:|-----------------:|-------------:|
-|レジスタ (on CPU)    |   byte |                ns|         GB/s |
-|キャッシュ  (on CPU) |kB ~ MB |             10 ns|         GB/s |
-|(メイン)メモリ       |MG ~ GB |            100 ns|      100 MB/s|
-|ハードディスク       |GB ~ TB |             10 ms|      100 MB/s|
+|レジスタ register (on CPU) |   byte |                ns|         GB/s |
+|キャッシュ cache  (on CPU) |kB ~ MB |             10 ns|         GB/s |
+|(メイン)メモリ memory      |MG ~ GB |            100 ns|      100 MB/s|
+|ハードディスク HDD         |GB ~ TB |             10 ms|      100 MB/s|
 
 - キャッシュを効率的に使わないと遅い
+It is slow if you do not use cash efficiently
 
 
 ---
-# データ格納構造
+# メモリ上のデータ格納構造: data structure in memory
 
-- データはまとまって取り扱われる(=キャッシュライン)
+- データはまとまって取り扱われる(=cache line)
     - 連続したデータは近く(キャッシュ内)に存在する確率が高い
-        - キャッシュヒット
-    - 不連続データアクセスはキャッシュミスを引き起こしやすい
-- (C/C++言語の)1次元配列は連続データ
+        - cache hit
+    - 不連続データアクセスはcache missを引き起こしやすい
+- (C/C++言語)One dimensional array is continuous data
     - うまく活用することで高速化が期待できる
 
 
 ---
-# 行列積でのメモリアクセス
+# memory access in matrix-matrix multiplication
 
 ![80% center](./行列メモリアクセス.png)
 
 
 ---
-# 単体チューニング
+# Performance Tuning (Single Process) 
 
 - CPUへ如何にうまくデータを送り込ませるかがポイント
-- 転送量 < 演算量 の場合
+- 転送量(transfer) < 演算量(computing) の場合
     - データを使いまわして高速化 → ブロック化
-    - 例： 行列積
-        - データ量 $N^2$
-        - 演算量 $N^3$
-- 転送量 > 演算量 の場合
+    - eg.) matrix-matrix multiplication
+        - data: $N^2$
+        - computation $N^3$
+- 転送量(transfer) > 演算量(computing) の場合
     - 高速化は難しい
         - 余計に計算する(メモリ転送量を減らす)ことも一考
-    - 例： 行列とベクトルの積
-    - 例： ハウスホルダー三重対角化
+    - eg.) matrix-vector multiplication
+    - eg.) House holder triple diagonalization
         - 行列-ベクトル積が必要 → 帯行列にする
 
 
 ---
-# 並列化プログラミング
+# parallel computing
 
 
 ---
@@ -277,31 +295,35 @@
 
 
 ---
-# フリーランチは終わった
+# The Free Lunch Is Over
 
-+ クロックが上がるとソフトウェアのパフォーマンスも勝手に向上
-+ クロック上昇の限界
-+ CPUを複数使用するしかない
-+ 並列処理のプログラムを書かねばパフォーマンスが上がらず
-
+1. クロックが上がるとソフトウェアのパフォーマンスも勝手に向上
+Improve software performance arbitrarily as clock rises
+1. クロック上昇の限界
+Limit of clock rise
+1. CPUを複数使用するしかない
+Only have to use multiple CPUs
+1. 並列処理のプログラムを書かねばパフォーマンスが上がらず
+Performance does not rise unless you write a parallel processing program!
 
 ---
 # 並列化プログラミングの心構え
 
-- 本当に並列化が必要か
+- 本当に並列化が必要か Is it really necessary to parallelize?
     - まずは単体動作でのチューニングをすべき
-    - そもそも単体動作で正しく動くことを確認すること
-- どこを並列化すべきか
-    - パレートの法則(80:20の法則)
+      First we should tune on standalone operation
+- どこを並列化すべきか Where should we parallelize?
+    - Pareto principle (80:20の法則)
     - プロファイラ等を使い、どの関数・ループが処理に時間がかかるかを見つける
-    - 思い込みは禁物
+      Using a profiler, find out which function or loop takes time to process
+    - 思い込みは禁物 Never imagined
 - 並列化したらなんでも速くなると思ったら大間違い
-
+  Will your program become faster if you parallelize? No, it's a big mistake!
 
 ---
 # (並列)性能評価指標 (1/4)
 
-## 台数効果(高速化率)
+## 台数効果 Number Effect (高速化率 Acceleration rate)
 
 $$
 S_P = \frac{T_S}{T_P}
@@ -318,7 +340,7 @@ $$
 ---
 # (並列)性能評価指標 (2/4)
 
-## 並列化効率
+## 並列化効率 Parallelization efficiency
 
 $$
 E_P = \frac{S_P}{P} \times 100  
@@ -330,7 +352,7 @@ $$
 ---
 # (並列)性能評価指標 (3/4)
 
-## アムダールの法則
+## アムダールの法則 Amdahl's law
 
 - 1台での実行時間$T_S$のうち、並列化ができる割合(並列化率)を$a$とすると、
 $P$台での並列実行時間$T_P$は
@@ -344,7 +366,6 @@ S_P = \frac{T_S}{T_P} = \frac{1}{(a / P +(1- a))}
 $$
 
 - 無限台使っても(P→∞), 台数効果は$1/(1-a)$しか出ない
-    - → アムダールの法則
 
 
 ---
@@ -360,7 +381,7 @@ $$
 
 
 ---
-# 並列化ではやくなる処理・はやくならない処理
+# Processing that becomes faster by parallelization / that does not get faster
 
 - "並列化出来る処理"と"頑張っても並列化できない処理"とがある
 
@@ -370,11 +391,11 @@ $$
 ---
 # スケーラビリティ(並列性能向上)の評価
 
-## ストロング・スケーリング
+## Strong Scaling
   - 問題規模は一定
   - プロセス数を増加
   - 並列数が多くなると達成は困難 (cf. アムダールの法則)
-## ウィーク・スケーリング
+## Weak Scaling
   - 1プロセスあたりの問題規模を一定
   - プロセス数を増加
 
@@ -383,95 +404,116 @@ $$
 
 ---
 # 基礎演習でのExcelシートの使い方
+  How to use the excel sheets in the basic excercise
 
 
 ---
-# プロセスとスレッド
+# Process and Threads
 
-- プロセス
+- Process
     - OSから独立したリソースを割り当てられる
+      The independent computer resource is assigned by the OS 
         - CPU
-        - メモリ空間
+        - メモリ空間; Memory space
     - 1つ以上のスレッドを持つ
-      - 親(プロセス) - 子(スレッド)
-- スレッド
-    - 実行単位
+      Process has one and more threads 
+- Thread
+    - 実行単位; execution unit
     - 各スレッドはプロセス内メモリを共有する
-
+      Each thread shares the process memory
+- see
+    - Activity Monitor (@MacOS)
+    - top (@UNIX)
 
 ---
-# 並列プログラミングの仕組みと方法
+# 並列プログラミングの方法1- Method of parallel programming
 
-# マルチプロセス
+## Multi-process
   - プロセス間でデータのやりとりをする仕組み
+    Data is exchanged between processes
   - プロセス間でメモリ空間は(基本的には)共有できない
+    Memory space can not be shared between processes
   - 別の計算機上にあるプロセスとも通信できる
-  - MPI(Message Passing Interface)
+    It can also communicate with processes on another computer
+  - eg.) MPI(Message Passing Interface)
 
-# マルチスレッド
+---
+
+# 並列プログラミングの方法2 - Method of parallel programming
+
+## Multi-threads
   - プロセス内部で複数スレッドが並列動作
+    Multiple threads operate in parallel within the process
   - プロセスのメモリ空間を複数スレッドで共有できる
+    Memory space can be shared between threads in the process
   - 排他処理が必要
+    Exclusive processing required 
   - 同一システム上でしか動作しない
-  - pthread(POSIX thread), OpenMP
+    It works only on the same system
+  - eg.) pthread(POSIX thread), OpenMP
 
 
 ---
-# MPIの特徴
+# MPIの特徴 Features of MPI
 
-- ライブラリ規格の一つ
+- ライブラリ規格の一つ One of the library standards
     - プログラミング言語、コンパイラに依存しない
+      It is independent of programming language and compiler
     - API(Application Programing Interface)を標準化
     - 実装がまちまち
-- 大規模計算が可能
-    - ネットワークを介したプロセス間通信が可能
-- プログラミングの自由度が高い
-    - 通信処理をプログラミングすることで最適化が可能
+- 大規模計算が可能 Large scale calculation is possible
+    - 高速ネットワークを介したプロセス間通信が可能 
+      Enable interprocess communication via high-speed network
+- プログラミングの自由度が高い Free parallel comunication programing
+    - 通信処理を自由にプログラミングすることで最適化が可能
+      Optimize by freely programming communication processing
     - 裏を返せばプログラミングが大変
 
 
 ---
-# MPIの実装
+# MPIの実装 Implementation
 
 - MPICH
     - Argonne National Laboratoryで開発
     - MPICH1, MPICH2など
 - OpenMPI
-    - オープンソース
+    - Open-source
     - 最近のLinuxディストリビューションで採用されつつある
-- ベンダー製MPI
-    - 計算機用に最適化されたMPI
+- MPI presented by the vender
+    - optimized MPI by the vender 
     - MPICH2がベースが多い
 
 
 ---
-# MPIプログラミングの作法
+# MPIプログラミングの作法 Rules
 
-+ 初期化
++ Initialize
   - 使う資源(リソース)を確保・準備する
-  - すべてのプロセスが呼び出す必要がある
+  - All processes need to call
   - MPI_Init()関数
-+ 後始末
++ Finalize
   - 使った資源(リソース)を返す
   - 返さないとゾンビ(ずっと居残るプロセス)になる場合も
-  - すべてのプロセスが呼び出す必要がある
+  - All processes need to call
   - MPI_Finalize()関数
 
 
 ---
-# MPI関数の性質
+# MPI関数の性質 Characters
 
-## 通信
-- 集団通信
+## 通信 Communication
+- 集団通信 Collective communication
   - 全プロセスが通信に参加
-    - 全プロセスが呼ばなければ止まる
-  - 1対1通信
-    - 通信に関与するプロセスのみが関数を呼ぶ
-- ブロッキング
-    - ブロッキング通信
-        - 通信が完了するまで次の処理を待つ
-    - ノンブロッキング通信
-        - 通信しながら別の処理が可能
+  - 全プロセスが呼ばなければ止まる
+- 1対1通信
+  - 通信に関与するプロセスのみが関数を呼ぶ
+## Blocking / non-Blocking
+- Blocking
+  - 通信が完了するまで次の処理を待つ
+    Wait for next processing until communication is completed
+- non-Blocking
+  - 通信しながら別の処理が可能
+    Different processing is possible while communicating
 
 
 ---
@@ -776,7 +818,6 @@ int main(int argc, char *argv[])
 }
 ```
 
-
 ---
 # MPIプログラミングのコツ
 
@@ -794,7 +835,7 @@ int main(int argc, char *argv[])
 
 
 ---
-# MPI補足
+# comments for MPI
 
 - MPIもソフトウェア
     - バグは少なからずある
@@ -806,6 +847,20 @@ int main(int argc, char *argv[])
 - 非同期通信が必ずしも良いとは限らない
     - デバッグ作業は格段に難しくなる
     - MPI_Test(), MPI_Wait()が呼ばれて初めて通信を開始する実装がある
+
+---
+# MPI Appendix
+
+## 派生データ型
+- 構造体を通信したいときに、オリジナルのデータ型を作成できる
+  - MPI_Type_create_struct (MPI_Type_struct)
+  - MPI_Type_Commit
+
+## MPI I/O
+- 巨大なファイルを各プロセスが同時に読み書きする仕組み
+  - MPI_File_open, MPI_File_close
+  - MPI_File_set_view
+  - MPI_File_write_all
 
 
 ---
@@ -1004,30 +1059,32 @@ for (int i = 0; i < 100; ++i) {
 ---
 ## OpenMP ライブラリ関数
     
-- omp.hをインクルードすること
+- don't forget include <omp.h>
 
 ```
 #include <omp.h>
 ```
 
-|関数名                 |内容                               |
-|:----------------------|:----------------------------------|
-| omp_get_num_procs()   | プロセッサの数を返す              |
-| omp_get_max_threads() | 実行可能なスレッドの最大数を取得  |
-| omp_get_num_threads() | 実行しているスレッド数を取得      |
-| omp_get_thread_num()  | 実行しているスレッド番号を取得    |
-| omp_get_wtime()       | ある時刻からの秒数を取得 |
+|functions              |  processing                     |
+|:----------------------|:--------------------------------|
+| omp_get_num_procs()   | プロセッサの数を返す                |
+| omp_get_max_threads() | 実行可能なスレッドの最大数を取得      |
+| omp_get_num_threads() | 実行しているスレッド数を取得          |
+| omp_get_thread_num()  | 実行しているスレッド番号を取得        |
+| omp_get_wtime()       | ある時刻からの秒数を取得            |
 
 
 ---
 # OpenMP 注意点
 
-- ビルド時は多くの場合コンパイルオプションが必要
-    - gnu compiler
+ビルド時は多くの場合コンパイルオプションが必要
+- gnu compiler
+
 ```bash
-$ gcc –fopenmp
+$ gcc -fopenmp
 ```
-    - intel compiler
+
+- intel compiler
 ```bash
 $ icpc –openmp
 ```
@@ -1048,8 +1105,8 @@ $ icpc –openmp
 - ノード内のメモリが共有できない(プロセスあたりのメモリ量が少ない)
 - MPIのコードだけを書けばよい
 
-## ハイブリッド並列
-- ノード間はMPI ノード内はOpenMP
+## Hybrid
+- ノード間はMPI / ノード内はOpenMP
 - ノード内メモリをプロセスが占有できる
 - 2種類の並列コードを書かないといけない
 
@@ -1059,7 +1116,7 @@ $ icpc –openmp
 
 ## MPI
 
-- RIST 青山幸也 著 https://www.hpci-office.jp/pages/seminar_text
+- 青山幸也 著, MPI虎の巻, http://www.hpci-office.jp/invite2/documents2/mpi-all_20160801.pdf
 - P.パチェコ 著, MPI並列プログラミング ISBN-13: 978-4563015442
 - 片桐孝洋 著, スパコンプログラミング入門: 並列処理とMPIの学習 ISBN-13: 978-4130624534
 
@@ -1070,16 +1127,15 @@ $ icpc –openmp
 
 
 ---
-# 演習環境の構築
+# 演習環境の構築 Setup your working environment
 
 
 ---
 # 概要
 
-+ ECCSのマシン(iMac)にログインする
-+ ターミナルを起動する
-    - コンソール画面が表示される
-+ sshでスーパーコンピュータシステムにログインする
++ log in the ECCS machine (iMac)
++ open a terminal
++ login to the super-computer system by using ssh
 
 - 2つのアカウント (ECCSとスパコン) の違いに注意!
 
@@ -1096,83 +1152,86 @@ $ icpc –openmp
 
 
 ---
-# ssh鍵の作成
+# making ssh-key
 
-+ ターミナルを起動する
-+ ssh-keygenを実行する
++ open a terminal
++ run ssh-keygen
 ```bash
 $ ssh-keygen -t rsa
 ```
 
-- 出来るファイル
+- created files
   - `$HOME/.ssh/id_rsa`
-    - 秘密鍵
-    - 誰にも見せないこと
-    - メール等で送らないこと
+    - the secret key
+    - 誰にも見せないこと DONOT show to anyone
+    - メール等で送らないこと DONOT e-maile 
   - `$HOME/.ssh/id_rsa.pub`
-    - 公開鍵(見られてもOK)
+    - public key (見られてもOK)
 
 
 ---
-# ssh公開鍵の登録
+# register the public ssh key
 
-- 詳しくは http://www.cc.u-tokyo.ac.jp/system/reedbush/QuickStartGuide.pdf
-- 手順
-    + webブラウザ(safari)を立ち上げる
-    + 以下のURLを入力する
+- see http://www.cc.u-tokyo.ac.jp/system/reedbush/QuickStartGuide.pdf
+- procedure
+    + open your web browser (eg. safari)
+    + open the following URL
         - https://reedbush-www.cc.u-tokyo.ac.jp/
-    + アカウントとパスワードを入力する
-        - パスワードはそのものではなく、表示されている文字列の奇数番目を繋ぎ合わせたもの
-     + 公開鍵を登録する
+    + submit your account and password
+        - パスワードはそのものではなく、表示されている文字列の**奇数**番目を繋ぎ合わせたもの
+        - The password is not itself, but stitched odd numbers of characters
+     + submit your public ssh key
 
 
 ---
-# スーパーコンピュータシステムへのログイン
+# login to the super computer
 
-- ターミナルから以下を入力
+- type in your terminal 
 
 ```bash
-$ ssh [スパコンのアカウント名]@reedbush-u.cc.u-tokyo.ac.jp
+$ ssh <supercomputer account>@reedbush-u.cc.u-tokyo.ac.jp
 ```
 
 - パスフレーズが聞かれた場合は、設定したパスフレーズを入れる
-- 成功するとログインできる
+  When a passphrase is asked, put the passphrase that you set
 
 
 ---
-# ファイル転送 (scp)
+# transmit files (scp)
 
 ```bash
-$ scp [転送元] [転送先]
+$ scp <from> <to>
 ```
 
 - cp コマンドと同様の使い方 (第４文型: SVOO)
     - -r オプションで(サブ)ディレクトリも一緒に
-- 場所(ファイル)の指定方法
-    - [[サーバーアカウント@]サーバー名:]ディレクトリ.../ファイル名
+- How to specify the location (filepath)
+    - [[account@]server:]directory.../filename
     - サーバー名を省略した場合はローカルマシンが想定
+      If the server name is omitted, the local machine is assumed
 
-- ローカルからリモートへ
+- from local machie to remote
 ```
 $ scp ./sample.c  xxxx@reedbush-u.cc.u-tokyo.ac.jp:somewhere
 ```
 
-- リモートからローカルへ
+- from remote machine to local
 ```
 $ scp xxxx@reedbush-u.cc.u-tokyo.ac.jp:sample.c ./somewhere
 ```
 
 
 ---
-# バッチシステムでの実行方法
+# How to use batch system
 
 多くのスパコンではインタラクティブな実行はせず、バッチ処理を行う
+In many supercomputers, do NOT execute interactive, but do batch processing
 
-- 使い方
+- usage
 
-|内容                 | コマンド             |
-|---------------------|----------------------|
-|ジョブの投入         | qsub "スクリプト"    |
-|状況確認             | rbstat               |
-|ジョブの削除         | qdel "ジョブID"      |
+|内容                        | コマンド              |
+|---------------------------|----------------------|
+|ジョブの投入 submit job      | qsub \<script>        |
+|状況確認 check your jobs     | rbstat               |
+|ジョブの削除 delete your jobs | qdel \<job ID>       |
 
