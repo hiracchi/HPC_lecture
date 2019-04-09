@@ -7,9 +7,11 @@
 
 # Seminar for Development of Practical Simulation Softwares (HPC basics)
 
-## 平野 敏行
-##(Toshiyuki HIRANO; `t-hirano [at] iis.u-tokyo.ac.jp`)
-## 2018/04/17
+## 平野 敏行 (Toshiyuki HIRANO)
+
+## `t-hirano [at] iis.u-tokyo.ac.jp`
+
+## 2019/04/16
 
 ---
 # Introduction
@@ -58,8 +60,8 @@
 
 - 最新情報・ヒントはwikiを参照すること
   See the wiki for the last information and hints.
-    - https://gitlab.com/ut-sdpss/2018-lecture/wikis/基礎演習課題
-    - https://gitlab.com/ut-sdpss/2018-lecture/wikis/BasicExercise
+    - https://gitlab.com/ut-sdpss/2019-lecture/wikis/基礎演習課題
+    - https://gitlab.com/ut-sdpss/2019-lecture/wikis/BasicExercise
 
 
 ---
@@ -106,7 +108,7 @@ After that, the matrix elements are stored in double precision floating point ty
 ---
 # Reedbush-U system @UT
 
-- http://www.cc.u-tokyo.ac.jp/system/reedbush/reedbush_intro.html
+- https://www.cc.u-tokyo.ac.jp/supercomputer/reedbush/system.php
 
 ![fit center](./reedbush_intro3.png)
 
@@ -117,13 +119,13 @@ After that, the matrix elements are stored in double precision floating point ty
     R_peak: 理論性能値(theorotical maximum performance; calculated)
     R_max: 実効性能値(determine by HPL benchmark)
 
-![80% center](./TOP500_201711_1.png)
+![80% center](./TOP500_201811_1.png)
 
 
 ---
 # Top500 (2/2)
 
-![80% center](./TOP500_201711_2.png)
+![80% center](./TOP500_201811_2.png)
 
 
 ---
@@ -1172,7 +1174,7 @@ $ ssh-keygen -t rsa
 ---
 # register the public ssh key
 
-- see http://www.cc.u-tokyo.ac.jp/system/reedbush/QuickStartGuide.pdf
+- see https://www.cc.u-tokyo.ac.jp/supercomputer/files/QuickStartGuide.pdf
 - procedure
     + open your web browser (eg. safari)
     + open the following URL
