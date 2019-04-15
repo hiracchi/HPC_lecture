@@ -187,20 +187,46 @@ After that, the matrix elements are stored in double precision floating point ty
 
 
 ---
+# CPUの浮動小数点演算能力
+
+|名称                      |                       |備考             |
+|:------------------------|----------------------:|-----------------|
+|Pentium (300 MHz)        |   300 MFLOPS          |1993; 1 F/C × 300MHz |
+|Pentium II (450 MHz)     |   450 MFLOPS          |1997            |
+|Pentium III (1.4 GHz)    |  2.1 GFLOPS           |1999; 1.5 F/C × 1.4 GHz|
+|Pentium 4 (3.8 GHz)      |   7.6 GFLOPS          |2000; 2 F/C × 3.8 GHz|
+|Core2Duo                 |  27 GFLOPS            |2006; 1.5 F/C ×2.33 GHz ×2|
+|Core i7(Sandy Bridge)    | 158 GFLOPS            |2011; 8 F/C ×3.3 GHz ×6|
+|Core i7(Haswell)         | 384 GFLOPS            |2013; 16 F/C × 3.0 GHz × 8|
+|Core i7(Broadwell)       | 480 GFLOPS            |2014; 16 F/C × 3.0 GHz × 10|
+
+---
+# GPUの浮動小数点演算能力
+
+|名称                      |                       |備考             |
+|:------------------------|----------------------:|-----------------|
+|NVIDIA GeForce GTX 1080  |SP(FP32):  8.87 TFLOPS |              |
+|                         |DP(FP64):  138 GFLOPS  |                 |
+|NVIDIA Tesla P100        |SP(FP32):  9.3 TFLOPS  |              |
+|                         |DP(FP64):  4.7 TFLOPS  |                 |
+|Radeon R9 290X           |SP(FP32)：5.63 TFLOPS  |              |
+|                         |DP(FP64)：1.4 TFLOPS   |                 |
+|Radeon VII               |SP(FP32): 13.4 TFLOPS  ||
+|                         |DP(FP64): 3.4 TFLOPS   ||
+
+
+---
 # 様々なハードの浮動小数点演算能力
 
-|名称              |                 |備考             |
-|:-----------------|----------------:|-----------------|
-|GeForce GTX 1080  | SP: 8.87 TFLOPS |GPU              |
-|                  | DP:  138 GFLOPS |                 |
-|Radeon R9 290X    | SP：5.63 TFLOPS |GPU              |
-|                  | DP：1.40 TFLOPS |                 |
-|Pentium (300 MHz) |      300 MFLOPS |CPU              |
-|Apple A8          |      115 GFLOPS |iPhone6          |
-|PS4               |     1.84 TFLOPS |                 |
-|地球シミュレータ    |    35.86 TFLOPS |初代             |
-|京                |    10.51 PFLOPS |                 |
-|神威太湖之光        |    93.01 PFLOPS |                 |
+|名称                      |                       |備考             |
+|:------------------------|----------------------:|-----------------|
+|Apple A8                 |      115 GFLOPS       |iPhone6          |
+|PS4                      |     1.84 TFLOPS       |                 |
+|地球シミュレータ            |    35.86 TFLOPS       |初代             |
+|京                       |    10.51 PFLOPS       |                 |
+|神威太湖之光               |    93.01 PFLOPS       |                 |
+|Summit                   |    143.5 PFLOPS       |                 |
+
 
 
 
@@ -231,8 +257,19 @@ When performing simple calculations in large quantities, the memory bandwidth de
     - 倍精度実数(double)は8 octet(byte):   
     3度の読み書き(e.g. c=a*b)で 8 x 3 = 24 octet(byte)
         - B/F値 24以上必要
-        - FX10: 0.36 / 24 = 0.015 = 1.5% (つまり 98.5% CPUは遊んでる)
+        - FX10: 0.36 / 24 = 0.015 (98.5% CPUは遊んでる)
+        - Reedbush: 0.127 / 24 = 0.0053 (99.5% CPUは遊んでる!)
 - CPUさえ速ければ、コア数さえ多ければ、単純に速いわけではない！
+
+
+---
+# ルーフラインモデル
+
+- メモリバンド幅(データ転送量)によって演算性能に上限
+- 演算性能[FLOPS] = min(理論演算性能[FLOPS], 
+        プログラム演算強度[FLOPS/Byte] × メモリバンド幅[Byte/sec])
+
+![100% center](./LoofLineModel.png)
 
 
 ---
@@ -247,7 +284,6 @@ When performing simple calculations in large quantities, the memory bandwidth de
 
 - キャッシュを効率的に使わないと遅い
 It is slow if you do not use cash efficiently
-
 
 ---
 # メモリ上のデータ格納構造: data structure in memory
@@ -377,7 +413,7 @@ $$
 
 - 全体の90%を並列化しても、1/(1-0.9)=10倍で飽和する
 
-![center](./Amdahl.png)
+![center](./Amdahl's Law.png)
 
 - 「京」(約100万並列)で性能を出す(並列化効率90%以上)には並列化率はいくら必要か？
 
