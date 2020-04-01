@@ -1,3 +1,7 @@
+---
+marp: true
+---
+
 <!-- $size: A4 -->
 <!-- $theme: default -->
 <!-- $template: invert -->
@@ -106,11 +110,11 @@ After that, the matrix elements are stored in double precision floating point ty
     - 最近の流行は分散並列型(distributed memory machine)
     
 ---
-# Reedbush-U system @UT
+# Oakbridge-CX system @UT
 
-- https://www.cc.u-tokyo.ac.jp/supercomputer/reedbush/system.php
+- https://www.cc.u-tokyo.ac.jp/supercomputer/obcx/service/
 
-![fit center](./reedbush_intro3.png)
+![80% center](./img/obcx_intro.png)
 
 
 ---
@@ -119,13 +123,13 @@ After that, the matrix elements are stored in double precision floating point ty
     R_peak: 理論性能値(theorotical maximum performance; calculated)
     R_max: 実効性能値(determine by HPL benchmark)
 
-![80% center](./TOP500_201811_1.png)
+![80% center](./img/TOP500_201911_1.png)
 
 
 ---
 # Top500 (2/2)
 
-![80% center](./TOP500_201811_2.png)
+![80% center](./img/TOP500_201911_2.png)
 
 
 ---
@@ -177,9 +181,9 @@ After that, the matrix elements are stored in double precision floating point ty
 
 
 
-|CPU                    |                  |備考                    |
-|:----------------------|-----------------:|-----------------------|
-|Intel Core2, ~Nehalem  | 4 DP FLOPS/Clock |SSE2(add)+SSE2(mul) |
+|CPU                    |                  |備考                  |
+|:----------------------|-----------------:|----------------------|
+|Intel Core2, ~Nehalem  | 4 DP FLOPS/Clock |SSE2(add)+SSE2(mul)   |
 |Intel Sandy Bridge~    | 8 DP FLOPS/Clock |4-wide FMA            |
 |Intel Haswell~         |16 DP FLOPS/Clock |4-wide FMA x 2        |
 |AMD Ryzen              | 8 DP FLOPs/Cycle |4-wide FMA            |
@@ -189,42 +193,42 @@ After that, the matrix elements are stored in double precision floating point ty
 ---
 # CPUの浮動小数点演算能力
 
-|名称                      |                       |備考             |
-|:------------------------|----------------------:|-----------------|
-|Pentium (300 MHz)        |   300 MFLOPS          |1993; 1 F/C × 300MHz |
-|Pentium II (450 MHz)     |   450 MFLOPS          |1997            |
-|Pentium III (1.4 GHz)    |  2.1 GFLOPS           |1999; 1.5 F/C × 1.4 GHz|
-|Pentium 4 (3.8 GHz)      |   7.6 GFLOPS          |2000; 2 F/C × 3.8 GHz|
-|Core2Duo                 |  27 GFLOPS            |2006; 1.5 F/C ×2.33 GHz ×2|
-|Core i7(Sandy Bridge)    | 158 GFLOPS            |2011; 8 F/C ×3.3 GHz ×6|
-|Core i7(Haswell)         | 384 GFLOPS            |2013; 16 F/C × 3.0 GHz × 8|
+|名称                      |                       |備考                      |
+|:------------------------|----------------------:|---------------------------|
+|Pentium (300 MHz)        |   300 MFLOPS          |1993; 1 F/C × 300MHz       |
+|Pentium II (450 MHz)     |   450 MFLOPS          |1997                       |
+|Pentium III (1.4 GHz)    |  2.1 GFLOPS           |1999; 1.5 F/C × 1.4 GHz    |
+|Pentium 4 (3.8 GHz)      |   7.6 GFLOPS          |2000; 2 F/C × 3.8 GHz      |
+|Core2Duo                 |  27 GFLOPS            |2006; 1.5 F/C ×2.33 GHz ×2 |
+|Core i7(Sandy Bridge)    | 158 GFLOPS            |2011; 8 F/C ×3.3 GHz ×6    |
+|Core i7(Haswell)         | 384 GFLOPS            |2013; 16 F/C × 3.0 GHz × 8 |
 |Core i7(Broadwell)       | 480 GFLOPS            |2014; 16 F/C × 3.0 GHz × 10|
 
 ---
 # GPUの浮動小数点演算能力
 
-|名称                      |                       |備考             |
-|:------------------------|----------------------:|-----------------|
-|NVIDIA GeForce GTX 1080  |SP(FP32):  8.87 TFLOPS |              |
-|                         |DP(FP64):  138 GFLOPS  |                 |
-|NVIDIA Tesla P100        |SP(FP32):  9.3 TFLOPS  |              |
-|                         |DP(FP64):  4.7 TFLOPS  |                 |
-|Radeon R9 290X           |SP(FP32)：5.63 TFLOPS  |              |
-|                         |DP(FP64)：1.4 TFLOPS   |                 |
-|Radeon VII               |SP(FP32): 13.4 TFLOPS  ||
-|                         |DP(FP64): 3.4 TFLOPS   ||
+|名称                     |                       |備考             |
+|:------------------------|----------------------:|------------------|
+|NVIDIA GeForce GTX 1080  |SP(FP32):   8.87 TFLOPS|                  |
+|                         |DP(FP64):  138 GFLOPS  |                  |
+|NVIDIA Tesla P100        |SP(FP32):   9.3 TFLOPS |                  |
+|                         |DP(FP64):   4.7 TFLOPS |                  |
+|Radeon R9 290X           |SP(FP32)：  5.63 TFLOPS|                  |
+|                         |DP(FP64)： 1.4 TFLOPS  |                  |
+|Radeon VII               |SP(FP32):  13.4 TFLOPS |                  |
+|                         |DP(FP64):   3.4 TFLOPS |                  |
 
 
 ---
 # 様々なハードの浮動小数点演算能力
 
-|名称                      |                       |備考             |
+|名称                     |                       |備考             |
 |:------------------------|----------------------:|-----------------|
 |Apple A8                 |      115 GFLOPS       |iPhone6          |
 |PS4                      |     1.84 TFLOPS       |                 |
-|地球シミュレータ            |    35.86 TFLOPS       |初代             |
+|地球シミュレータ         |    35.86 TFLOPS       |初代             |
 |京                       |    10.51 PFLOPS       |                 |
-|神威太湖之光               |    93.01 PFLOPS       |                 |
+|神威太湖之光             |    93.01 PFLOPS       |                 |
 |Summit                   |    143.5 PFLOPS       |                 |
 
 
@@ -1267,9 +1271,8 @@ In many supercomputers, do NOT execute interactive, but do batch processing
 
 - usage
 
-|内容                        | コマンド              |
-|---------------------------|----------------------|
-|ジョブの投入 submit job      | qsub \<script>        |
-|状況確認 check your jobs     | rbstat               |
-|ジョブの削除 delete your jobs | qdel \<job ID>       |
-
+|内容                          | コマンド             |
+|------------------------------|----------------------|
+|ジョブの投入 submit job       | qsub \<script\>      |
+|状況確認 check your jobs      | rbstat               |
+|ジョブの削除 delete your jobs | qdel \<job ID\>      |
