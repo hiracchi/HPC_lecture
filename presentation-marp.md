@@ -6,7 +6,6 @@ marp: true
 <!-- $theme: default -->
 <!-- $template: invert -->
 <!-- page_number: true -->
-<!-- *page_number: false -->
 <!-- footer: -->
 
 # Seminar for Development of Practical Simulation Softwares (HPC basics)
@@ -15,7 +14,7 @@ marp: true
 
 ## `t-hirano [at] iis.u-tokyo.ac.jp`
 
-## 2019/04/16
+## 2020/04/14
 
 ---
 # Introduction
@@ -165,7 +164,7 @@ After that, the matrix elements are stored in double precision floating point ty
 - 種類
 
 |       | 情報量 (bit)       |備考                        |
-|:------|:------------------|:---------------------------|
+|:------|:------------------|:----------------------------|
 | 単精度 |   32 (=  4 octet) |Single Precision; SP; float |
 | 倍精度 |   64 (=  8 octet) |Double Precision; DP; double|
 | 4倍精度|  128 (= 16 octet) |Quad Presicion              |
@@ -184,10 +183,11 @@ After that, the matrix elements are stored in double precision floating point ty
 |CPU                    |                  |備考                  |
 |:----------------------|-----------------:|----------------------|
 |Intel Core2, ~Nehalem  | 4 DP FLOPS/Clock |SSE2(add)+SSE2(mul)   |
-|Intel Sandy Bridge~    | 8 DP FLOPS/Clock |4-wide FMA            |
-|Intel Haswell~         |16 DP FLOPS/Clock |4-wide FMA x 2        |
+|Intel Sandy Bridge~    | 8 DP FLOPS/Clock |AVX                   |
+|Intel Haswell~         |16 DP FLOPS/Clock |AVX2                  |
 |AMD Ryzen              | 8 DP FLOPs/Cycle |4-wide FMA            |
-|Intel Xeon Phi (K.L.)  |32 DP FLOPs/Clock |8-wide FMA x 2        |
+|Intel Xeon Phi (K.L.)  |32 DP FLOPs/Clock |AVX512                |
+|Intel Xeon SkylakeSP~  |32 DP FLOPs/Clock |AVX512                |
 
 
 ---
@@ -207,7 +207,7 @@ After that, the matrix elements are stored in double precision floating point ty
 ---
 # GPUの浮動小数点演算能力
 
-|名称                     |                       |備考             |
+|名称                     |                       |備考              |
 |:------------------------|----------------------:|------------------|
 |NVIDIA GeForce GTX 1080  |SP(FP32):   8.87 TFLOPS|                  |
 |                         |DP(FP64):  138 GFLOPS  |                  |
@@ -241,19 +241,21 @@ After that, the matrix elements are stored in double precision floating point ty
     - 理論バンド幅 = DRAMクロック周波数(clock) x 1クロックあたりのデータ転送回数(cycle) x メモリバンド幅 (bandwidth: 8 byte) x CPUメモリチャンネル数 (channels)
         - DDR3-1600:
         (DRAMクロック周波数 x 1クロックあたりのデータ転送回数) = 1600
-    - iMac (Intel Core i5-5575R, DDR3)
-        - 1867 MHz x 8 x 2 = 29872 MB/s = 29.9 GB/s
-	- Reedbush 1node (DDR4-2400) 153.6 GB/s
-    - 計算ノード間(Reedbush-U; InfiniBand EDR 4x): 100 Gbps = (100/8) GB/s = 12.5 GB/s
+        - iMac (Intel Core i5-5575R, DDR3)
+          - 1867 MHz x 8 x 2 = 29872 MB/s = 29.9 GB/s
+	      - Reedbush 1node (DDR4-2400) 153.6 GB/s
+        - Oakbridge-CX 1node 281.6 GB/s
+          - 計算ノード間: 100 Gbps = (100/8) GB/s = 12.5 GB/s
 - 単純な計算を大量に行う場合は、メモリバンド幅が性能を決める
 When performing simple calculations in large quantities, the memory bandwidth determines the performance.
 
 
 ---
 # Byte per FLOPS
-
+2.7 * 56 * 32
 - 通称 B/F値
 - 1回の浮動小数点演算の間にアクセスできるデータ量
+    - Oakbridge-CX: 281.6 GB/s / 4.8384 (=2.7 * 56 * 32) TFLOPS = 0.05820
     - Reedbush: 153.6 GB/s / (2.1x16x36) GFLOPS = 0.127
     - FX10: 85 GB/s / 236.5 GFLOPS = 0.36
     - SR16000: 512 GB/s / 980.48 GFLOPS = 0.52
@@ -263,6 +265,7 @@ When performing simple calculations in large quantities, the memory bandwidth de
         - B/F値 24以上必要
         - FX10: 0.36 / 24 = 0.015 (98.5% CPUは遊んでる)
         - Reedbush: 0.127 / 24 = 0.0053 (99.5% CPUは遊んでる!)
+        - Oakbridge-CX: 0.05820 / 24 = 0.002425 (99.76% CPUは遊んでる!)
 - CPUさえ速ければ、コア数さえ多ければ、単純に速いわけではない！
 
 
@@ -279,12 +282,15 @@ When performing simple calculations in large quantities, the memory bandwidth de
 ---
 # 階層メモリ構造(Hierarchical memory structure)
 
-|名称                 |記憶容量|アクセス速度(遅延)|転送速度(帯域)|
-|:--------------------|-------:|-----------------:|-------------:|
-|レジスタ register (on CPU) |   byte |                ns|         GB/s |
-|キャッシュ cache  (on CPU) |kB ~ MB |             10 ns|         GB/s |
-|(メイン)メモリ memory      |MG ~ GB |            100 ns|      100 MB/s|
+|名称                       |記憶容量|アクセス速度(遅延)|転送速度(帯域)|
+|:--------------------------|-------:|-----------------:|-------------:|
+|レジスタ register (on CPU) |   byte |                ns|          GB/s|
+|キャッシュ cache  (on CPU) |kB ~ MB |             10 ns|          GB/s|
+|(メイン)メモリ memory      |MG ~ GB |            100 ns|       3~ GB/s|
+|SSD                        |GB ~ TB |            100 us|    0.1~3 GB/s|
 |ハードディスク HDD         |GB ~ TB |             10 ms|      100 MB/s|
+
+cf.) https://colin-scott.github.io/personal_website/research/interactive_latency.html
 
 - キャッシュを効率的に使わないと遅い
 It is slow if you do not use cash efficiently
@@ -1170,7 +1176,6 @@ $ icpc –openmp
 
 ---
 # 演習環境の構築 Setup your working environment
-
 
 ---
 # 概要
