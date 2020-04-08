@@ -64,8 +64,8 @@ marp: true
 
 - 最新情報・ヒントはwikiを参照すること
   See the wiki for the last information and hints.
-    - https://gitlab.com/ut-sdpss/2019-lecture/wikis/基礎演習課題
-    - https://gitlab.com/ut-sdpss/2019-lecture/wikis/BasicExercise
+    - https://gitlab.com/ut-sdpss/2020/lecture/-/wikis/基礎演習課題
+    - https://gitlab.com/ut-sdpss/2020/lecture/-/wikis/BasicExercise
 
 
 ---
@@ -81,7 +81,7 @@ marp: true
       NOT use linear algebra packages such as the BLAS.
         - テストに使用することは可
         - サンプルは用意してあります
-- dead line:　2018/May/中旬 (wikiを参照; see the wiki pages)
+- dead line:　2020/May/中旬 (wikiを参照; see the wiki pages)
     - スケーラビリティのテスト(excelファイル)も添付のこと
 
 ---
