@@ -2,11 +2,12 @@
 marp: true
 ---
 
-<!-- $size: A4 -->
-<!-- $theme: default -->
-<!-- $template: invert -->
-<!-- page_number: true -->
-<!-- footer: -->
+<!-- $size: A4 
+ $theme: default 
+ $template: invert 
+ paginate: true 
+ footer: 
+-->
 
 # Seminar for Development of Practical Simulation Softwares (HPC basics)
 
@@ -113,8 +114,7 @@ After that, the matrix elements are stored in double precision floating point ty
 
 - https://www.cc.u-tokyo.ac.jp/supercomputer/obcx/service/
 
-![80% center](./img/obcx_intro.png)
-
+![width:15cm center](./img/obcx_intro.png)
 
 ---
 # Top500 (http://top500.org/) (1/2)
@@ -122,13 +122,13 @@ After that, the matrix elements are stored in double precision floating point ty
     R_peak: 理論性能値(theorotical maximum performance; calculated)
     R_max: 実効性能値(determine by HPL benchmark)
 
-![80% center](./img/TOP500_201911_1.png)
+![width:18cm](./img/TOP500_201911_1.png)
 
 
 ---
 # Top500 (2/2)
 
-![80% center](./img/TOP500_201911_2.png)
+![w:25cm](./img/TOP500_201911_2.png)
 
 
 ---
@@ -137,7 +137,7 @@ After that, the matrix elements are stored in double precision floating point ty
 - https://www.zdnet.com/article/linux-totally-dominates-supercomputers/
 - https://japan.zdnet.com/article/35110755/
 
-![25% center](./TOP500_201711_linux.png)
+![bg right:40%](./TOP500_201711_linux.png)
 
 ---
 # HPC programing
@@ -179,14 +179,12 @@ After that, the matrix elements are stored in double precision floating point ty
     FMA: 積和演算(fused multiply-add)
 
 
-
 |CPU                    |                  |備考                  |
 |:----------------------|-----------------:|----------------------|
 |Intel Core2, ~Nehalem  | 4 DP FLOPS/Clock |SSE2(add)+SSE2(mul)   |
 |Intel Sandy Bridge~    | 8 DP FLOPS/Clock |AVX                   |
 |Intel Haswell~         |16 DP FLOPS/Clock |AVX2                  |
 |AMD Ryzen              | 8 DP FLOPs/Cycle |4-wide FMA            |
-|Intel Xeon Phi (K.L.)  |32 DP FLOPs/Clock |AVX512                |
 |Intel Xeon SkylakeSP~  |32 DP FLOPs/Clock |AVX512                |
 
 
@@ -196,7 +194,6 @@ After that, the matrix elements are stored in double precision floating point ty
 |名称                      |                       |備考                      |
 |:------------------------|----------------------:|---------------------------|
 |Pentium (300 MHz)        |   300 MFLOPS          |1993; 1 F/C × 300MHz       |
-|Pentium II (450 MHz)     |   450 MFLOPS          |1997                       |
 |Pentium III (1.4 GHz)    |  2.1 GFLOPS           |1999; 1.5 F/C × 1.4 GHz    |
 |Pentium 4 (3.8 GHz)      |   7.6 GFLOPS          |2000; 2 F/C × 3.8 GHz      |
 |Core2Duo                 |  27 GFLOPS            |2006; 1.5 F/C ×2.33 GHz ×2 |
@@ -215,8 +212,6 @@ After that, the matrix elements are stored in double precision floating point ty
 |                         |DP(FP64):   4.7 TFLOPS |                  |
 |Radeon R9 290X           |SP(FP32)：  5.63 TFLOPS|                  |
 |                         |DP(FP64)： 1.4 TFLOPS  |                  |
-|Radeon VII               |SP(FP32):  13.4 TFLOPS |                  |
-|                         |DP(FP64):   3.4 TFLOPS |                  |
 
 
 ---
@@ -251,14 +246,13 @@ When performing simple calculations in large quantities, the memory bandwidth de
 
 
 ---
-# Byte per FLOPS
-2.7 * 56 * 32
-- 通称 B/F値
+# Byte per FLOPS (通称 B/F値)
+
 - 1回の浮動小数点演算の間にアクセスできるデータ量
-    - Oakbridge-CX: 281.6 GB/s / 4.8384 (=2.7 * 56 * 32) TFLOPS = 0.05820
-    - Reedbush: 153.6 GB/s / (2.1x16x36) GFLOPS = 0.127
-    - FX10: 85 GB/s / 236.5 GFLOPS = 0.36
     - SR16000: 512 GB/s / 980.48 GFLOPS = 0.52
+    - FX10: 85 GB/s / 236.5 GFLOPS = 0.36
+    - Reedbush: 153.6 GB/s / (2.1x16x36) GFLOPS = 0.127
+    - Oakbridge-CX: 281.6 GB/s / 4.8384 (=2.7 * 56 * 32) TFLOPS = 0.05820
 - 参考
     - 倍精度実数(double)は8 octet(byte):   
     3度の読み書き(e.g. c=a*b)で 8 x 3 = 24 octet(byte)
@@ -276,7 +270,7 @@ When performing simple calculations in large quantities, the memory bandwidth de
 - 演算性能[FLOPS] = min(理論演算性能[FLOPS], 
         プログラム演算強度[FLOPS/Byte] × メモリバンド幅[Byte/sec])
 
-![100% center](./LoofLineModel.png)
+![auto](./LoofLineModel.png)
 
 
 ---
@@ -287,7 +281,6 @@ When performing simple calculations in large quantities, the memory bandwidth de
 |レジスタ register (on CPU) |   byte |                ns|          GB/s|
 |キャッシュ cache  (on CPU) |kB ~ MB |             10 ns|          GB/s|
 |(メイン)メモリ memory      |MG ~ GB |            100 ns|       3~ GB/s|
-|SSD                        |GB ~ TB |            100 us|    0.1~3 GB/s|
 |ハードディスク HDD         |GB ~ TB |             10 ms|      100 MB/s|
 
 cf.) https://colin-scott.github.io/personal_website/research/interactive_latency.html
@@ -339,7 +332,7 @@ It is slow if you do not use cash efficiently
 - “The Free Lunch Is Over”
     - http://www.gotw.ca/publications/concurrency-ddj.htm
 
-![50% center](./CPU.png)
+![width:12cm](./CPU.png)
 
 
 ---
@@ -425,7 +418,7 @@ $$
 
 ![center](./Amdahl'sLaw.png)
 
-- 「京」(約100万並列)で性能を出す(並列化効率90%以上)には並列化率はいくら必要か？
+- 約100万並列(e.g.「京」)で性能を出す(並列化効率90%以上)には並列化率はいくら必要か？
 
 
 ---
@@ -433,7 +426,7 @@ $$
 
 - "並列化出来る処理"と"頑張っても並列化できない処理"とがある
 
-![Amdahl_point](./Amdahl_point.png)
+![width:16cm](./Amdahl_point.png)
 
 
 ---
@@ -442,12 +435,13 @@ $$
 ## Strong Scaling
   - 問題規模は一定
   - プロセス数を増加
-  - 並列数が多くなると達成は困難 (cf. アムダールの法則)
+  - 並列数が多くなると達成は困難 
+    - cf. アムダールの法則
 ## Weak Scaling
   - 1プロセスあたりの問題規模を一定
   - プロセス数を増加
 
-![50% center](./scalability.png)
+![bg right width:90%](./scalability.png)
 
 
 ---
@@ -549,13 +543,12 @@ $$
 ---
 # MPI関数の性質 Characters
 
-## 通信 Communication
+### 通信 Communication
 - 集団通信 Collective communication
-  - 全プロセスが通信に参加
-  - 全プロセスが呼ばなければ止まる
+  - 全プロセスが通信に参加 (全プロセスが呼ばなければ止まる)
 - 1対1通信
   - 通信に関与するプロセスのみが関数を呼ぶ
-## Blocking / non-Blocking
+### Blocking / non-Blocking
 - Blocking
   - 通信が完了するまで次の処理を待つ
     Wait for next processing until communication is completed
@@ -664,13 +657,14 @@ MPI_Datatype datatype, MPI_Op op, MPI_Comm comm);
 ```
 
 - 集計した後、結果を全プロセスへ送信する
-- パラメータ
-    - sendbuf: (in) 送信バッファのアドレス
-    - recvbuf: (in) 受信バッファのアドレス
-    - count: (in) 送信する数
-    - datatype: (in) データ型
-    - MPI_Op: (in) 演算オペレータ
-    - comm: (in) コミュニケータ
+```
+    sendbuf: (in) 送信バッファのアドレス
+    recvbuf: (in) 受信バッファのアドレス
+    count: (in) 送信する数
+    datatype: (in) データ型
+    MPI_Op: (in) 演算オペレータ
+    comm: (in) コミュニケータ
+```
 - 戻り値: MPI_Success(正常)
 
 
@@ -687,13 +681,14 @@ int dest, int tag, MPI_Comm comm);
 ```
 
 - destプロセスへデータを送る
-- パラメータ
-    - buf: (in) 送信バッファのアドレス
-    - count: (in) 送信する数
-    - datatype: (in) データ型
-    - dest: (in) 送信先ランク
-    - tag: (in) タグ
-    - comm: (in) コミュニケータ
+```
+    buf: (in) 送信バッファのアドレス
+    count: (in) 送信する数
+    datatype: (in) データ型
+    dest: (in) 送信先ランク
+    tag: (in) タグ
+    comm: (in) コミュニケータ
+```
 - 戻り値: MPI_Success(正常)
 
 
@@ -710,13 +705,14 @@ int source, int tag, MPI_Comm comm, MPI_Status* status);
 ```
 
 - sourceプロセスからのデータを受け取る
-- パラメータ
-    - buf: (in) 送信バッファのアドレス
-    - count: (in) 送信する数
-    - datatype: (in) データ型
-    - source: (in) 送信元ランク
-    - tag: (in) タグ, comm: (in) コミュニケータ
-    - status: (out) ステータス情報
+```
+    buf: (in) 送信バッファのアドレス
+    count: (in) 送信する数
+    datatype: (in) データ型
+    source: (in) 送信元ランク
+    tag: (in) タグ, comm: (in) コミュニケータ
+    status: (out) ステータス情報
+```
 - 戻り値: MPI_Success(正常)
 
 
@@ -733,13 +729,15 @@ int dest, int tag, MPI_Comm comm, MPI_Request* request);
 ```
 
 - destプロセスへデータを送る
-- パラメータ
-    - buf: (in) 送信バッファのアドレス
-    - count: (in) 送信する数
-    - datatype: (in) データ型
-    - dest: (in) 送信先ランク
-    - tag: (in) タグ, comm: (in) コミュニケータ
-    - request: (out) リクエストハンドル
+```
+    buf: (in) 送信バッファのアドレス
+    count: (in) 送信する数
+    datatype: (in) データ型
+    dest: (in) 送信先ランク
+    tag: (in) タグ, comm: (in) コミュニケータ
+    request: (out) リクエストハンドル
+```
+
 - 戻り値: MPI_Success(正常)
 
 
@@ -756,14 +754,15 @@ int source, int tag, MPI_Comm comm, MPI_Request* request);
 ```
 
 - sourceプロセスからのデータを受け取る
-- パラメータ
-    - buf: (in) 送信バッファのアドレス
-    - count: (in) 送信する数
-    - datatype: (in) データ型
-    - source: (in) 送信元ランク
-    - tag: (in) タグ
-    - comm: (in) コミュニケータ
-    - request: (out) リクエストハンドル
+```
+    buf: (in) 送信バッファのアドレス
+    count: (in) 送信する数
+    datatype: (in) データ型
+    source: (in) 送信元ランク
+    tag: (in) タグ
+    comm: (in) コミュニケータ
+    request: (out) リクエストハンドル
+```
 
 
 ---
@@ -778,8 +777,9 @@ int MPI_Barrier(MPI_Comm comm);
 ```
 
 - 同期をとる
-- パラメータ
-    - comm: (in) コミュニケータ
+```
+    comm: (in) コミュニケータ
+```
 
 
 ---
@@ -794,9 +794,10 @@ int MPI_Wait(MPI_Request* request, MPI_Status* status);
 ```
 
 - 変数の通信待ち処理を行う
-- パラメータ
-    - request: (in) リクエストハンドル
-    - status: (out) 受信状態
+```
+    request: (in) リクエストハンドル
+    status: (out) 受信状態
+```
 
 
 ---
@@ -817,16 +818,12 @@ double MPI_Wtime();
 ---
 # MPIデータ型
 
-|C/C++ data type|MPI data type    |
-|:--------------|:----------------|
-|char           |MPI_CHAR         |
-|int            |MPI_INT          |
-|long           |MPI_LONG         |
-|float          |MPI_FLOAT        |
-|double         |MPI_DOUBLE       |
-|unsigned char  |MPI_UNSIGNED_CHAR|
-|unsigned int   |MPI_UNSIGNED_INT |
-|unsigned long  |MPI_UNSIGNED_LONG|
+|C/C++ data type|MPI data type    |C/C++ data type|MPI data type    |
+|:--------------|:----------------|:--------------|:----------------|
+|char           |MPI_CHAR         |unsigned char  |MPI_UNSIGNED_CHAR|
+|int            |MPI_INT          |unsigned int   |MPI_UNSIGNED_INT |
+|long           |MPI_LONG         |unsigned long  |MPI_UNSIGNED_LONG|
+|float          |MPI_FLOAT        |double         |MPI_DOUBLE       |
 
 
 ---
@@ -1067,6 +1064,8 @@ for (int i = 0; i < 100; ++i) {
 }
 ```
 
+---
+# 代表的なOpenMP pragma (5)
 
 ## 直後のブロックを排他的に処理
 
@@ -1082,7 +1081,7 @@ for (int i = 0; i < 100; ++i) {
 
 
 ---
-# 代表的なOpenMP pragma (5)
+# 代表的なOpenMP pragma (6)
 
 ## スレッドの同期を取る
 
@@ -1093,6 +1092,9 @@ for (int i = 0; i < 100; ++i) {
 
 }
 ```
+
+---
+# 代表的なOpenMP pragma (7)
 
 ## 共有変数のメモリの一貫性を保つ
 
@@ -1113,13 +1115,13 @@ for (int i = 0; i < 100; ++i) {
 #include <omp.h>
 ```
 
-|functions              |  processing                     |
-|:----------------------|:--------------------------------|
-| omp_get_num_procs()   | プロセッサの数を返す                |
-| omp_get_max_threads() | 実行可能なスレッドの最大数を取得      |
-| omp_get_num_threads() | 実行しているスレッド数を取得          |
-| omp_get_thread_num()  | 実行しているスレッド番号を取得        |
-| omp_get_wtime()       | ある時刻からの秒数を取得            |
+|functions              |  processing                      |
+|:----------------------|:---------------------------------|
+| omp_get_num_procs()   | プロセッサの数を返す             |
+| omp_get_max_threads() | 実行可能なスレッドの最大数を取得 |
+| omp_get_num_threads() | 実行しているスレッド数を取得     |
+| omp_get_thread_num()  | 実行しているスレッド番号を取得   |
+| omp_get_wtime()       | ある時刻からの秒数を取得         |
 
 
 ---
@@ -1177,6 +1179,7 @@ $ icpc –openmp
 ---
 # 演習環境の構築 Setup your working environment
 
+
 ---
 # 概要
 
@@ -1185,6 +1188,7 @@ $ icpc –openmp
 + login to the super-computer system by using ssh
 
 - 2つのアカウント (ECCSとスパコン) の違いに注意!
+
 
 ---
 # ssh接続の仕組み
@@ -1195,14 +1199,28 @@ $ icpc –openmp
     - 秘密鍵で暗号化したデータ → 公開鍵でしか復号できない
     - 公開鍵で暗号化したデータ → 秘密鍵でしか復号できない
 
-![50% center](./ssh-connection.png)
+![width:15cm](./ssh-connection.png)
 
+ - https://qiita.com/tag1216/items/5d06bad7468f731f590e
 
 ---
-# making ssh-key
+# ターミナルソフトの準備
 
-+ open a terminal
-+ run ssh-keygen
+## Windows
+  - putty: https://ice.hotmint.com/putty/index.html
+  - RLogin: http://nanno.dip.jp/softlib/man/rlogin/
+  - TeraTerm: http://ttssh2.osdn.jp
+  - WSL (Windows Subsystem for Linux)
+## MacOS
+  - OS添付のターミナル
+  - iTerm2: https://www.iterm2.com
+
+---
+# making ssh-key (MacOS, Linux etc.)
+
+- open a terminal
+- run ssh-keygen
+
 ```bash
 $ ssh-keygen -t rsa
 ```
@@ -1217,18 +1235,187 @@ $ ssh-keygen -t rsa
 
 
 ---
-# register the public ssh key
+# making ssh-key (Windows)
 
-- see https://www.cc.u-tokyo.ac.jp/supercomputer/files/QuickStartGuide.pdf
+- cf.) https://www.xlsoft.com/jp/blog/blog/2019/07/25/post-6946/
+- ターミナルソフトとしてputtyやRLoginなどを用意
+  - putty: https://ice.hotmint.com/putty/index.html
+  - RLogin: http://nanno.dip.jp/softlib/man/rlogin/
+- puttyの場合
+  - puttygenを利用 (https://ja.osdn.net/projects/winscp/wiki/ui_puttygen)
+
+
+---
+# making ssh-key (Windows; putty)
+
+## ダウンロード
+zipファイルを入手します。
+- 本家 [https://www.chiark.greenend.org.uk/~sgtatham/putty/]
+- 日本語版おすすめ [https://ice.hotmint.com/putty/index.html]
+
+## インストール
+zipファイルを展開して、任意の場所にコピー(または移動)します。.exeファイルが実行ファイルです。
+
+
+---
+# making ssh-key (Windows; puttyでのssh鍵作成1)
+
+## puttygen.exeを実行します
+- Windows10のバージョンやセキュリティソフトによってはセキュリティダイアログが出る場合があります。
+
+![](./img/puttygen1.png)
+
+
+---
+# making ssh-key (Windows; puttyでのssh鍵作成2)
+
+## [生成]をクリックします
+  ダイアログ上でマウスをランダムに動かします。
+
+![](./img/puttygen2.png)
+
+
+---
+# making ssh-key (Windows; puttyでのssh鍵作成3)
+
+## 鍵が作成されます
+- sshの公開鍵が選択されます。 
+
+![](./img/puttygen3.png)
+
+
+---
+# making ssh-key (Windows; puttyでのssh鍵作成4)
+
+## パスフレーズを入力します
+- パスワードとは違います。好きに入力してください(覚えておく必要はあります)。 
+
+![](./img/puttygen4.png)
+
+
+---
+# making ssh-key (Windows; puttyでのssh鍵作成5)
+
+## 鍵を保存します
+### [公開鍵の保存]をクリックして、公開鍵を好きな名前(例えばid_rsa.pub)で保存します。
+### [秘密鍵の保存] をクリックして、秘密鍵を好きな名前(例えばid_rsa)で保存します。
+  - 秘密鍵を保存しておけば、後でペアとなる公開鍵を再作成することもできます。
+  
+  *** 注意！ ***
+  puttyの秘密鍵は特殊フォーマット(.ppk)で保存されます。そのままでは作成した秘密鍵をLinuxやMacOSにコピーしても使えません。puttygenのメニュー[変換]→[OpenSSH形式へエクスポート(最新)]で保存したものを利用してください。 
+
+
+---
+# making ssh-key (Windows; RLoginでのssh鍵作成1)
+
+## ダウンロード
+zipファイルを入手します。
+  - RLogin: http://nanno.dip.jp/softlib/man/rlogin/
+
+## インストール
+zipファイルを展開して、任意の場所にコピー(または移動)します。.exeファイルが実行ファイルです。
+
+
+---
+# making ssh-key (Windows; RLoginでのssh鍵作成2)
+
+- [ファイル] -> [サーバーに接続] 
+  "Server Select"ダイアログが開く
+
+- [新規] をクリック
+  "Server New Entry"ダイアログが開く
+
+![width:12cm](./img/RLogin1.png)
+  
+
+---
+# making ssh-key (Windows; RLoginでのssh鍵作成3)
+
+- 左側のツリーから"サーバー/プロトコル"を選択する
+
+![width:12cm](./img/RLogin2.png)
+
+
+---
+# making ssh-key (Windows; RLoginでのssh鍵作成4)
+
+- SSHグループから"認証キー"をクリックする
+  "認証キー"ダイアログが開く
+
+![width:12cm](./img/RLogin3.png)
+
+
+---
+# making ssh-key (Windows; RLoginでのssh鍵作成5)
+
+- 新規グループで(任意の名前を入力後)作成ボタンをクリックする
+  SSH鍵の作成ダイアログが開く
+
+![width:12cm](./img/RLogin4.png)
+
+- パスフレーズを入力してOKをクリックする
+  SSH鍵の作成ダイアログが閉じる
+
+
+---
+# making ssh-key (Windows; RLoginでのssh鍵作成6)
+
+- "認証キー"ダイアログの認証キーリストから作成した項目を選択し、公開鍵ボタンをクリックする
+  "Public Key"ダイアログが開く。表示される文字列が公開鍵となる。
+  全て選択してコピー(Ctrl+C)し、メモ帳などにペースト(Ctrl-V)して利用する。
+
+![width:12cm](./img/RLogin5.png)
+
+- OKを押して"Public Key"ダイアログを閉じる。
+
+
+---
+# making ssh-key (Windows; RLoginでのssh鍵作成7)
+
+- ファイルグループのエクスポートボタンをクリックする。
+  "SSH鍵ファイルの保存"ダイアログが開く
+
+![width:12cm](./img/RLogin6.png)
+
+- 任意の保存する場所を選択し、(必要であれば)パスフレーズを入力してOKをクリックする。
+  SSH秘密鍵が保存される。後でインポートすると公開鍵が表示できる。
+
+---
+# making ssh-key (Windows; RLoginでのssh鍵作成8)
+
+- OKをクリックして"SSH鍵ファイルの保存"ダイアログを閉じる。
+  以降、SSH秘密鍵は作成できたので適宜ダイアログを閉じて良い。
+
+- 作成したSSH秘密鍵は
+  "Server New Entry"ダイアログ -> "サーバー" -> "ホスト設定" -> "ssh認証鍵"
+  で選択して利用する。
+
+
+---
+# register the public ssh key (Oakbridge) (1/2)
+
+- https://www.cc.u-tokyo.ac.jp/supercomputer/obcx/service/
+  - 新しいブラウザウィンドウ(タブ)を開いて、再度利用支援ポータルに接続
+  - 新しいパスワードでログインできるかどうか確かめる
+    - OKなら前のブラウザウィンドウ(タブ)を閉じる
+    - NGなら落ち着いて再度挑戦する
 - procedure
-    + open your web browser (eg. safari)
+    + open your web browser
     + open the following URL
-        - https://reedbush-www.cc.u-tokyo.ac.jp/
-    + submit your account and password
-        - パスワードはそのものではなく、表示されている文字列の**奇数**番目を繋ぎ合わせたもの
-        - The password is not itself, but stitched odd numbers of characters
-     + submit your public ssh key
+        - 利用支援ポータル (https://obcx-www.cc.u-tokyo.ac.jp/)
+    + submit your account (利用者番号) and password
+    + change password
 
+---
+# register the public ssh key (Oakbridge) (2/2)
+
+- procedure
+    - 利用支援ポータル (https://obcx-www.cc.u-tokyo.ac.jp/)
+    + submit your public ssh key
+      左側の [SSH公開鍵登録] から公開鍵を登録
+
+- manual
+  - [利用支援ポータル] -> [ドキュメント閲覧] -> [Oakbridge-CX 利用手引書]
 
 ---
 # login to the super computer
@@ -1236,7 +1423,7 @@ $ ssh-keygen -t rsa
 - type in your terminal 
 
 ```bash
-$ ssh <supercomputer account>@reedbush-u.cc.u-tokyo.ac.jp
+$ ssh <supercomputer account>@obcx.cc.u-tokyo.ac.jp
 ```
 
 - パスフレーズが聞かれた場合は、設定したパスフレーズを入れる
@@ -1244,7 +1431,7 @@ $ ssh <supercomputer account>@reedbush-u.cc.u-tokyo.ac.jp
 
 
 ---
-# transmit files (scp)
+# transmit files (scp 1/2)
 
 ```bash
 $ scp <from> <to>
@@ -1257,16 +1444,31 @@ $ scp <from> <to>
     - サーバー名を省略した場合はローカルマシンが想定
       If the server name is omitted, the local machine is assumed
 
+---
+# transmit files (scp 2/2)
+
 - from local machie to remote
 ```
-$ scp ./sample.c  xxxx@reedbush-u.cc.u-tokyo.ac.jp:somewhere
+$ scp ./sample.c  xxxx@obcx.cc.u-tokyo.ac.jp:somewhere
 ```
 
 - from remote machine to local
 ```
-$ scp xxxx@reedbush-u.cc.u-tokyo.ac.jp:sample.c ./somewhere
+$ scp xxxx@obcx.cc.u-tokyo.ac.jp:sample.c ./somewhere
 ```
 
+
+---
+# transmit files (scp/sftp using GUI)
+
+## Windows
+- FileZilla (無償)
+- WinSCP (無償)
+
+## MacOS
+- FileZilla (無償)
+- Transmit (有償)
+- Forklift (有償)
 
 ---
 # How to use batch system
@@ -1278,6 +1480,6 @@ In many supercomputers, do NOT execute interactive, but do batch processing
 
 |内容                          | コマンド             |
 |------------------------------|----------------------|
-|ジョブの投入 submit job       | qsub \<script\>      |
-|状況確認 check your jobs      | rbstat               |
-|ジョブの削除 delete your jobs | qdel \<job ID\>      |
+|ジョブの投入 submit job       | pjsub \<script\>     |
+|状況確認 check your jobs      | pjstat               |
+|ジョブの削除 delete your jobs | pjdel \<job ID\>     |
