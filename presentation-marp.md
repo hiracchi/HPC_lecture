@@ -175,7 +175,7 @@ After that, the matrix elements are stored in double precision floating point ty
 # 様々なCPUのクロックあたりの浮動小数点演算数
 
     SSE: ストリーミングSIMD拡張命令(Streaming SIMD Extensions)
-      SIMD: single instruction multiple data
+    SIMD: single instruction multiple data
     FMA: 積和演算(fused multiply-add)
 
 
