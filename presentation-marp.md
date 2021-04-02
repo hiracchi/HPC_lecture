@@ -15,7 +15,7 @@ marp: true
 
 ## `t-hirano [at] iis.u-tokyo.ac.jp`
 
-## 2020/04/14
+## 2021/04/13
 
 ---
 # Introduction
@@ -81,7 +81,7 @@ marp: true
       NOT use linear algebra packages such as the BLAS.
         - テストに使用することは可
         - サンプルは用意してあります
-- dead line:　2020/May/中旬 (wikiを参照; see the wiki pages)
+- dead line:　2021/May/中旬 (wikiを参照; see the wiki pages)
     - スケーラビリティのテスト(excelファイル)も添付のこと
 
 ---
@@ -122,13 +122,13 @@ After that, the matrix elements are stored in double precision floating point ty
     R_peak: 理論性能値(theorotical maximum performance; calculated)
     R_max: 実効性能値(determine by HPL benchmark)
 
-![width:18cm](./img/TOP500_201911_1.png)
+![width:18cm](./img/TOP500_202011_1.png)
 
 
 ---
 # Top500 (2/2)
 
-![w:25cm](./img/TOP500_201911_2.png)
+![w:25cm](./img/TOP500_202011_2.png)
 
 
 ---
@@ -212,6 +212,7 @@ After that, the matrix elements are stored in double precision floating point ty
 |                         |DP(FP64):   4.7 TFLOPS |                  |
 |Radeon R9 290X           |SP(FP32)：  5.63 TFLOPS|                  |
 |                         |DP(FP64)： 1.4 TFLOPS  |                  |
+|Apple M1                 |SP(FP32)?: 2.6 TFLOPS  |                  |
 
 
 ---
@@ -221,10 +222,12 @@ After that, the matrix elements are stored in double precision floating point ty
 |:------------------------|----------------------:|-----------------|
 |Apple A8                 |      115 GFLOPS       |iPhone6          |
 |PS4                      |     1.84 TFLOPS       |                 |
+|PS5                      |    10.28 TFLOPS       |                 |
 |地球シミュレータ         |    35.86 TFLOPS       |初代             |
 |京                       |    10.51 PFLOPS       |                 |
 |神威太湖之光             |    93.01 PFLOPS       |                 |
 |Summit                   |    143.5 PFLOPS       |                 |
+|富岳                     |    415   PFLOPS       |                 |
 
 
 
@@ -464,8 +467,8 @@ $$
     - 各スレッドはプロセス内メモリを共有する
       Each thread shares the process memory
 - see
-    - Activity Monitor (@MacOS)
-    - top (@UNIX)
+    - Task Manager (@Windows)
+    - Activity Monitor(@MacOS), top/htop (@Mac, UNIX)
 
 ---
 # 並列プログラミングの方法1- Method of parallel programming
@@ -659,7 +662,7 @@ MPI_Datatype datatype, MPI_Op op, MPI_Comm comm);
 - 集計した後、結果を全プロセスへ送信する
 ```
     sendbuf: (in) 送信バッファのアドレス
-    recvbuf: (in) 受信バッファのアドレス
+    recvbuf: (out) 受信バッファのアドレス
     count: (in) 送信する数
     datatype: (in) データ型
     MPI_Op: (in) 演算オペレータ
@@ -706,8 +709,8 @@ int source, int tag, MPI_Comm comm, MPI_Status* status);
 
 - sourceプロセスからのデータを受け取る
 ```
-    buf: (in) 送信バッファのアドレス
-    count: (in) 送信する数
+    buf: (out) 受信バッファのアドレス
+    count: (in) 受信する数
     datatype: (in) データ型
     source: (in) 送信元ランク
     tag: (in) タグ, comm: (in) コミュニケータ
@@ -755,8 +758,8 @@ int source, int tag, MPI_Comm comm, MPI_Request* request);
 
 - sourceプロセスからのデータを受け取る
 ```
-    buf: (in) 送信バッファのアドレス
-    count: (in) 送信する数
+    buf: (out) 受信バッファのアドレス
+    count: (in) 受信する数
     datatype: (in) データ型
     source: (in) 送信元ランク
     tag: (in) タグ
@@ -1210,7 +1213,8 @@ $ icpc –openmp
   - putty: https://ice.hotmint.com/putty/index.html
   - RLogin: http://nanno.dip.jp/softlib/man/rlogin/
   - TeraTerm: http://ttssh2.osdn.jp
-  - WSL (Windows Subsystem for Linux)
+  - WSL2 (Windows Subsystem for Linux) + Windows Terminal
+    - https://dev.classmethod.jp/articles/linux-beginner-wsl2-windowsterminal-setup/
 ## MacOS
   - OS添付のターミナル
   - iTerm2: https://www.iterm2.com
