@@ -1487,9 +1487,7 @@ see users guide in https://obcx-www.cc.u-tokyo.ac.jp/
   - lecture6 (in the class)
   - lecture (outside of the class)
 
-- usage
-
-|内容                          | コマンド             |
+|                              | command              |
 |------------------------------|----------------------|
 |ジョブの投入 submit job       | pjsub \<script\>     |
 |状況確認 check your jobs      | pjstat               |
