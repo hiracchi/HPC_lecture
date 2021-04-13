@@ -64,8 +64,8 @@ marp: true
 
 - 最新情報・ヒントはwikiを参照すること
   See the wiki for the last information and hints.
-    - https://gitlab.com/ut-sdpss/2020/lecture/-/wikis/基礎演習課題
-    - https://gitlab.com/ut-sdpss/2020/lecture/-/wikis/BasicExercise
+    - https://gitlab.com/ut-sdpss/2021/lecture/-/wikis/基礎演習課題
+    - https://gitlab.com/ut-sdpss/2021/lecture/-/wikis/BasicExercise
 
 
 ---
@@ -137,7 +137,7 @@ After that, the matrix elements are stored in double precision floating point ty
 - https://www.zdnet.com/article/linux-totally-dominates-supercomputers/
 - https://japan.zdnet.com/article/35110755/
 
-![bg right:40%](./TOP500_201711_linux.png)
+![bg right:60%](./TOP500_201711_linux.png)
 
 ---
 # HPC programing
@@ -225,7 +225,6 @@ After that, the matrix elements are stored in double precision floating point ty
 |PS5                      |    10.28 TFLOPS       |                 |
 |地球シミュレータ         |    35.86 TFLOPS       |初代             |
 |京                       |    10.51 PFLOPS       |                 |
-|神威太湖之光             |    93.01 PFLOPS       |                 |
 |Summit                   |    143.5 PFLOPS       |                 |
 |富岳                     |    415   PFLOPS       |                 |
 
@@ -421,7 +420,7 @@ $$
 
 ![center](./Amdahl'sLaw.png)
 
-- 約100万並列(e.g.「京」)で性能を出す(並列化効率90%以上)には並列化率はいくら必要か？
+- 約100万並列で性能を出す(並列化効率90%以上)には並列化率はいくら必要か？
 
 
 ---
@@ -571,9 +570,10 @@ int MPI_Init(int *argc, char **argv);
 ```
 
 - MPI環境を起動・初期化する
-- パラメータ
-    - argc: コマンドライン引数の総数
-    - argv: 引数の文字列を指すポインタ配列
+```
+    argc: コマンドライン引数の総数
+    argv: 引数の文字列を指すポインタ配列
+```
 - 戻り値: MPI_Success(正常)
 
 
@@ -602,9 +602,10 @@ int MPI_Comm_size(MPI_Comm comm, int *size);
 
 - コミュニケータに含まれる全プロセスの数を返す
 - コミュニケータには全MPIプロセスを表す定義済みコミュニケータ`MPI_COMM_WORLD`が使用できる
-- パラメータ
-    - comm: (in) コミュニケータ
-    - size: (out) プロセスの総数
+```
+    comm: (in) コミュニケータ
+    size: (out) プロセスの総数
+```
 - 戻り値: MPI_Success(正常)
 
 
@@ -620,9 +621,10 @@ int MPI_Comm_rank(MPI_Comm comm, int *rank);
 
 - コミュニケータ内の自身のプロセスランクを返す
     - ランクは0から始まる
-- パラメータ
-    - comm: (in) コミュニケータ
-    - rank: (out) ランク
+```
+    comm: (in) コミュニケータ
+    rank: (out) ランク
+```
 - 戻り値: MPI_Success(正常)
 
 
@@ -638,12 +640,13 @@ int root, MPI_Comm comm);
 ```
 
 - rootからcommの全プロセスに対してbroadcastする
-- パラメータ
-    - buf: (in)  送信バッファのアドレス
-    - count: (in) 送信する数
-    - datatype: (in) データ型
-    - root: (in) 送信元ランク
-    - comm: (in) コミュニケータ
+```
+    buf: (in)  送信バッファのアドレス
+    count: (in) 送信する数
+    datatype: (in) データ型
+    root: (in) 送信元ランク
+    comm: (in) コミュニケータ
+```
 - 戻り値: MPI_Success(正常)
 
 
@@ -1186,11 +1189,11 @@ $ icpc –openmp
 ---
 # 概要
 
-+ log in the ECCS machine (iMac)
++ (log in the ECCS machine (iMac@電子計算機室))
 + open a terminal
 + login to the super-computer system by using ssh
 
-- 2つのアカウント (ECCSとスパコン) の違いに注意!
+- 2つのアカウント (ECCSとスパコン) の違いに注意! (iMac@電子計算機室)
 
 
 ---
@@ -1398,25 +1401,26 @@ zipファイルを展開して、任意の場所にコピー(または移動)し
 ---
 # register the public ssh key (Oakbridge) (1/2)
 
-- https://www.cc.u-tokyo.ac.jp/supercomputer/obcx/service/
-  - 新しいブラウザウィンドウ(タブ)を開いて、再度利用支援ポータルに接続
-  - 新しいパスワードでログインできるかどうか確かめる
-    - OKなら前のブラウザウィンドウ(タブ)を閉じる
-    - NGなら落ち着いて再度挑戦する
 - procedure
     + open your web browser
     + open the following URL
         - 利用支援ポータル (https://obcx-www.cc.u-tokyo.ac.jp/)
     + submit your account (利用者番号) and password
     + change password
+      - DO NOT close the browser before you can log-in the portal site by using another browser.
+        新しいパスワードでログインできるかどうか確かめる
+        - OKなら前のブラウザウィンドウ(タブ)を閉じる
+        - NGなら落ち着いて再度挑戦する
 
 ---
 # register the public ssh key (Oakbridge) (2/2)
 
-- procedure
-    - 利用支援ポータル (https://obcx-www.cc.u-tokyo.ac.jp/)
-    + submit your public ssh key
+- procedure (continued)
+    - submit your public ssh key
       左側の [SSH公開鍵登録] から公開鍵を登録
+      - [MacOS] `open ~/.ssh` to open the folder by Finder
+      - DO NOT close the browser before you can log-in the server by ssh!
+        sshでのログインが確認できるまでブラウザを閉じないこと
 
 - manual
   - [利用支援ポータル] -> [ドキュメント閲覧] -> [Oakbridge-CX 利用手引書]
