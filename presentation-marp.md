@@ -1479,10 +1479,13 @@ $ scp xxxx@obcx.cc.u-tokyo.ac.jp:sample.c ./somewhere
 - Forklift (有償)
 
 ---
-# How to use batch system
+# How to use the batch system
 
-多くのスパコンではインタラクティブな実行はせず、バッチ処理を行う
-In many supercomputers, do NOT execute interactive, but do batch processing
+see users guide in https://obcx-www.cc.u-tokyo.ac.jp/
+
+- available queue
+  - lecture6 (in the class)
+  - lecture (outside of the class)
 
 - usage
 
