@@ -1,13 +1,8 @@
 ---
 marp: true
+theme: default
+paginate: true
 ---
-
-<!-- $size: A4 
- $theme: default 
- $template: invert 
- paginate: true 
- footer: 
--->
 
 # Seminar for Development of Practical Simulation Softwares (HPC basics)
 
@@ -15,7 +10,7 @@ marp: true
 
 ## `t-hirano [at] iis.u-tokyo.ac.jp`
 
-## 2021/04/13
+## 2022/04/19
 
 ---
 # Introduction
@@ -114,7 +109,7 @@ After that, the matrix elements are stored in double precision floating point ty
 
 - https://www.cc.u-tokyo.ac.jp/supercomputer/obcx/service/
 
-![width:15cm center](./img/obcx_intro.png)
+![width:15cm drop-shadow center](./img/obcx_intro.png)
 
 ---
 # Top500 (http://top500.org/) (1/2)
@@ -122,13 +117,13 @@ After that, the matrix elements are stored in double precision floating point ty
     R_peak: 理論性能値(theorotical maximum performance; calculated)
     R_max: 実効性能値(determine by HPL benchmark)
 
-![width:18cm](./img/TOP500_202011_1.png)
+![width:17cm drop-shadow center](./img/TOP500_202111_1.png)
 
 
 ---
 # Top500 (2/2)
 
-![w:25cm](./img/TOP500_202011_2.png)
+![w:25cm](./img/TOP500_202111_2.png)
 
 
 ---
@@ -163,12 +158,13 @@ After that, the matrix elements are stored in double precision floating point ty
   - IEEE 754
 - 種類
 
-|       | 情報量 (bit)       |備考                        |
-|:------|:------------------|:----------------------------|
-| 単精度 |   32 (=  4 octet) |Single Precision; SP; float |
-| 倍精度 |   64 (=  8 octet) |Double Precision; DP; double|
-| 4倍精度|  128 (= 16 octet) |Quad Presicion              |
-| 半精度 |   16 (=  2 octet) |half                        |
+|                | 情報量 (bit)       |備考                        |
+|:---------------|:------------------|:----------------------------|
+| 単精度 (FP32)  |   32 (=  4 octet) |Single Precision; SP; float  |
+| 倍精度 (FP64)  |   64 (=  8 octet) |Double Precision; DP; double |
+| 4倍精度 (FP128)|  128 (= 16 octet) |Quad Presicion               |
+| 半精度 (FP16)  |   16 (=  2 octet) |half                         |
+| FP8            |    8 (=  1 octet) |                             |
 
 
 ---
@@ -1172,7 +1168,7 @@ $ icpc –openmp
 
 ## MPI
 
-- 青山幸也 著, MPI虎の巻, http://www.hpci-office.jp/invite2/documents2/mpi-all_20160801.pdf
+- 青山幸也 著, MPI虎の巻, https://www.hpci-office.jp/invite2/documents2/HPC_Programming_Seminar/mpi-all_20160801_20181206.pdf
 - P.パチェコ 著, MPI並列プログラミング ISBN-13: 978-4563015442
 - 片桐孝洋 著, スパコンプログラミング入門: 並列処理とMPIの学習 ISBN-13: 978-4130624534
 
