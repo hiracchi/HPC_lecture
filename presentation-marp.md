@@ -59,8 +59,8 @@ paginate: true
 
 - 最新情報・ヒントはwikiを参照すること
   See the wiki for the last information and hints.
-    - https://gitlab.com/ut-sdpss/2021/lecture/-/wikis/基礎演習課題
-    - https://gitlab.com/ut-sdpss/2021/lecture/-/wikis/BasicExercise
+    - https://gitlab.com/ut-sdpss/2022/lecture/-/wikis/基礎演習課題
+    - https://gitlab.com/ut-sdpss/2022/lecture/-/wikis/BasicExercise
 
 
 ---
@@ -68,15 +68,15 @@ paginate: true
 
 - 行列の次元はファイルに記録されているのでハードコーディングしないこと
   Since the dimension of the matrix is recorded in the file, should not be hard-coded.
-- 倍精度で計算・出力すること
-  Use double precision.
+- 倍精度(FP64)で計算・出力すること
+  Use double precision (FP64).
 - MPIおよびOpenMPで並列計算すること
   Use parallel computing by using MPI and OpenMP
     - BLASなどの行列演算ライブラリを使用しないこと
       NOT use linear algebra packages such as the BLAS.
         - テストに使用することは可
         - サンプルは用意してあります
-- dead line:　2021/May/中旬 (wikiを参照; see the wiki pages)
+- dead line: 2022/May/中旬 (wikiを参照; see the wiki pages)
     - スケーラビリティのテスト(excelファイル)も添付のこと
 
 ---
@@ -186,6 +186,7 @@ After that, the matrix elements are stored in double precision floating point ty
 
 ---
 # CPUの浮動小数点演算能力
+- https://dench.flatlib.jp/opengl/cpuflops
 
 |名称                      |                       |備考                      |
 |:------------------------|----------------------:|---------------------------|
@@ -196,20 +197,21 @@ After that, the matrix elements are stored in double precision floating point ty
 |Core i7(Sandy Bridge)    | 158 GFLOPS            |2011; 8 F/C ×3.3 GHz ×6    |
 |Core i7(Haswell)         | 384 GFLOPS            |2013; 16 F/C × 3.0 GHz × 8 |
 |Core i7(Broadwell)       | 480 GFLOPS            |2014; 16 F/C × 3.0 GHz × 10|
+|Apple M1                 | 2.6 TFLOPS            |2020                       |
 
 ---
 # GPUの浮動小数点演算能力
+- https://www.techpowerup.com/gpu-specs/
+- https://dench.flatlib.jp/opengl/gpuflops
 
 |名称                     |                       |備考              |
-|:------------------------|----------------------:|------------------|
-|NVIDIA GeForce GTX 1080  |SP(FP32):   8.87 TFLOPS|                  |
-|                         |DP(FP64):  138 GFLOPS  |                  |
-|NVIDIA Tesla P100        |SP(FP32):   9.3 TFLOPS |                  |
-|                         |DP(FP64):   4.7 TFLOPS |                  |
-|Radeon R9 290X           |SP(FP32)：  5.63 TFLOPS|                  |
-|                         |DP(FP64)： 1.4 TFLOPS  |                  |
-|Apple M1                 |SP(FP32)?: 2.6 TFLOPS  |                  |
-
+|:------------------------|:----------------------|------------------|
+|NVIDIA GeForce RTX 3090  |SP(FP32): 35.58 TFLOPS |                  |
+|                         |DP(FP64): 556.0 GFLOPS | 1:16             |
+|NVIDIA A100              |SP(FP32): 19.49 TFLOPS |                  |
+|                         |DP(FP64): 9.746 TFLOPS | 1:2              |
+|AMD Radeon RX 6600       |SP(FP32): 8.928 TFLOPS |                  |
+|                         |DP(FP64): 558.0 GFLOPS | 1:16             |
 
 ---
 # 様々なハードの浮動小数点演算能力
@@ -223,8 +225,6 @@ After that, the matrix elements are stored in double precision floating point ty
 |京                       |    10.51 PFLOPS       |                 |
 |Summit                   |    143.5 PFLOPS       |                 |
 |富岳                     |    415   PFLOPS       |                 |
-
-
 
 
 ---
@@ -316,7 +316,7 @@ It is slow if you do not use cash efficiently
     - 高速化は難しい
         - 余計に計算する(メモリ転送量を減らす)ことも一考
     - eg.) matrix-vector multiplication
-    - eg.) House holder triple diagonalization
+    - eg.) Householder triple diagonalization
         - 行列-ベクトル積が必要 → 帯行列にする
 
 
@@ -451,10 +451,8 @@ $$
 # Process and Threads
 
 - Process
-    - OSから独立したリソースを割り当てられる
+    - OSから独立したリソース(CPU, メモリ空間 等)を割り当てられる
       The independent computer resource is assigned by the OS 
-        - CPU
-        - メモリ空間; Memory space
     - 1つ以上のスレッドを持つ
       Process has one and more threads 
 - Thread
@@ -1215,7 +1213,7 @@ $ icpc –openmp
   - WSL2 (Windows Subsystem for Linux) + Windows Terminal
     - https://dev.classmethod.jp/articles/linux-beginner-wsl2-windowsterminal-setup/
 ## MacOS
-  - OS添付のターミナル
+  - OS添付のターミナル(Application/Utility/Termina.app)
   - iTerm2: https://www.iterm2.com
 
 ---
@@ -1480,7 +1478,7 @@ $ scp xxxx@obcx.cc.u-tokyo.ac.jp:sample.c ./somewhere
 see users guide in https://obcx-www.cc.u-tokyo.ac.jp/
 
 - available queue
-  - lecture6 (in the class)
+  - lecture8 (in the class)
   - lecture (outside of the class)
 
 |                              | command              |
