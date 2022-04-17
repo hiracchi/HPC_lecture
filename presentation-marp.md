@@ -1217,6 +1217,41 @@ $ icpc –openmp
   - iTerm2: https://www.iterm2.com
 
 ---
+# ssh 予備知識1 (advance knowledge part 1)
+
+## file format
+- 秘密鍵・公開鍵ともにテキストファイル
+  Both private and public keys are in text file format.
+  - https://qiita.com/ponsuke0531/items/7b34347213660c80bc95
+- public key in OpenSSH format
+```
+ssh-rsa AAAA...
+```
+- private key in OpenSSH format
+```
+-----BEGIN RSA PRIVATE KEY-----
+...
+-----END RSA PRIVATE KEY-----
+```
+
+---
+# ssh 予備知識2 (advance knowledge part 2)
+## default file location
+  Be careful to overwrite files!
+- UNIX(MacOS)/Linux
+  - ~/.ssh/id_rsa     -> private key
+  - ~/.ssh/id_rsa.pub -> public key
+  - ~/.ssh/config     -> config file
+- Windows 
+  The location of the files depends on the application.
+
+---
+# ssh 補足 (supplemental information)
+# ssh config file
+  ホスト毎の鍵の管理や多段接続、ポート転送が簡単に使えるようになる。
+- https://qiita.com/passol78/items/2ad123e39efeb1a5286b
+
+---
 # making ssh-key (MacOS, Linux etc.)
 
 - open a terminal
