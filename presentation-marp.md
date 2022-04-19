@@ -12,6 +12,8 @@ paginate: true
 
 ## 2022/04/19
 
+本資料はmarp(https://marp.app/)で作成されています。
+
 ---
 # Introduction
 
