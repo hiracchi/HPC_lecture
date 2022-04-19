@@ -1206,19 +1206,6 @@ $ icpc –openmp
  - https://qiita.com/tag1216/items/5d06bad7468f731f590e
 
 ---
-# ターミナルソフトの準備
-
-## Windows
-  - putty: https://ice.hotmint.com/putty/index.html
-  - RLogin: http://nanno.dip.jp/softlib/man/rlogin/
-  - TeraTerm: http://ttssh2.osdn.jp
-  - WSL2 (Windows Subsystem for Linux) + Windows Terminal
-    - https://dev.classmethod.jp/articles/linux-beginner-wsl2-windowsterminal-setup/
-## MacOS
-  - OS添付のターミナル(Application/Utility/Termina.app)
-  - iTerm2: https://www.iterm2.com
-
----
 # ssh 予備知識1 (advance knowledge part 1)
 
 ## file format
@@ -1248,6 +1235,17 @@ ssh-rsa AAAA...
   The location of the files depends on the application.
 
 ---
+# ssh 予備知識3 (advance knowledge part 3)
+## file location of the public key in remote
+
+`~/.ssh/authorized_keys` に置く
+- 1行につき 1ホスト
+- 間違えると認証できない(**接続できなくなる**)ので注意。
+
+- 置くのは **公開鍵(public key)**
+  - 管理者(知らない人)に見られても大丈夫
+
+---
 # ssh 補足 (supplemental information)
 # ssh config file
   ホスト毎の鍵の管理や多段接続、ポート転送が簡単に使えるようになる。
@@ -1270,6 +1268,20 @@ $ ssh-keygen -t rsa
     - メール等で送らないこと DONOT e-maile 
   - `$HOME/.ssh/id_rsa.pub`
     - public key (見られてもOK)
+
+
+---
+# ターミナルソフトの準備
+
+## Windows
+  - putty: https://ice.hotmint.com/putty/index.html
+  - RLogin: http://nanno.dip.jp/softlib/man/rlogin/
+  - TeraTerm: http://ttssh2.osdn.jp
+  - WSL2 (Windows Subsystem for Linux) + Windows Terminal
+    - https://dev.classmethod.jp/articles/linux-beginner-wsl2-windowsterminal-setup/
+## MacOS
+  - OS添付のターミナル(Application/Utility/Termina.app)
+  - iTerm2: https://www.iterm2.com
 
 
 ---
