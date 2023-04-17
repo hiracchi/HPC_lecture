@@ -1,6 +1,6 @@
 ---
-marp: true
-theme: default
+marp: false
+theme: beamer
 paginate: true
 ---
 
@@ -295,7 +295,7 @@ paginate: true
 - 演算性能[FLOPS] = min(理論演算性能[FLOPS],
   プログラム演算強度[FLOPS/Byte] × メモリバンド幅[Byte/sec])
 
-![auto](./LoofLineModel.png)
+![auto center](./LoofLineModel.png)
 
 ---
 
@@ -375,11 +375,11 @@ cf.) https://colin-scott.github.io/personal_website/research/interactive_latency
 
 ---
 
-![bg fit](./img/pokemon-cpu.jpg)
+![auto center](./img/pokemon-cpu.jpg)
 
 ---
 
-![bg fit](./img/dospara-cpu.jpg)
+![auto center](./img/dospara-cpu.jpg)
 
 ---
 
@@ -460,11 +460,12 @@ $$
 
 ---
 
-# Processing that becomes faster by parallelization / that does not get faster
+# 並列化は万能か?!
 
+- Processing that becomes faster by parallelization / that does not get faster
 - "並列化出来る処理"と"頑張っても並列化できない処理"とがある
 
-![width:16cm](./Amdahl_point.png)
+![auto center](./Amdahl_point.png)
 
 ---
 
@@ -482,7 +483,7 @@ $$
 - 1 プロセスあたりの問題規模を一定
 - プロセス数を増加
 
-![bg right width:90%](./scalability.png)
+![bg right:30% width:100%](./scalability.png)
 
 ---
 
@@ -1249,6 +1250,19 @@ $ icpc –openmp
 - ノード内メモリをプロセスが占有できる
 - 2 種類の並列コードを書かないといけない
 
+___
+
+# 最近の話題(Recent Topics)
+
+## CPU affinity
+- OMP_PLACES
+- OMP_PROC_BIND
+- GOMP_CPU_AFFINITY
+- KMP_AFFINITY
+- mpiexec --report-bindings
+
+
+
 ---
 
 # 参考文献
@@ -1262,6 +1276,7 @@ $ icpc –openmp
 
 - OpenMP 入門 http://www.isus.jp/article/openmp-special/getting-started-with-openmp/
 - 北山 洋幸 著, OpenMP 入門―マルチコア CPU 時代の並列プログラミング ISBN-13: 978-4798023434
+- https://www.openmp.org/wp-content/uploads/OpenMPRef-5.2-1121-JA.pdf
 
 ---
 
