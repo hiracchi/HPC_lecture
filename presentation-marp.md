@@ -375,11 +375,11 @@ cf.) https://colin-scott.github.io/personal_website/research/interactive_latency
 
 ---
 
-![width:12cm](./img/pokemon-cpu.jpg)
+![bg fit](./img/pokemon-cpu.jpg)
 
 ---
 
-![width:12cm](./img/dospara-cpu.jpg)
+![bg fit](./img/dospara-cpu.jpg)
 
 ---
 
