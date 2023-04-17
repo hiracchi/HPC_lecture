@@ -91,6 +91,11 @@ paginate: true
 - その後、行列の値が倍精度浮動小数点型(double)で値が格納される
   After that, the matrix elements are stored in double precision floating point type - 行優先(row-oriented) - eg.) (0, 0), (1, 0), (2, 0), … (N-1, 0), (1, 0), …, (N-1, N-1)
 
+# Remark
+
+- サンプルコードは仕様に則っていません。
+  Sample code does not follow the specification.
+
 ---
 
 # Outline of the High Performance Computing (HPC)
@@ -370,6 +375,14 @@ cf.) https://colin-scott.github.io/personal_website/research/interactive_latency
 
 ---
 
+![width:12cm](./img/pokemon-cpu.jpg)
+
+---
+
+![width:12cm](./img/dospara-cpu.jpg)
+
+---
+
 # 並列化プログラミングの心構え
 
 - 本当に並列化が必要か Is it really necessary to parallelize?
@@ -476,6 +489,13 @@ $$
 # 基礎演習での Excel シートの使い方
 
 How to use the excel sheets in the basic excercise
+
+- 水色のセルに数値を代入すれば自動的に計算されるようになっていますが、必要に応じて変更してもかまいません。
+  The calculation is done automatically by assigning values to the light blue cells, but you may change this if necessary.
+- シートは2枚(Strong scaling, Weak Scaling)あるので、忘れないようにしてください。
+  There are two sheets (Strong Scaling, Weak Scaling), so please do not forget them.
+
+
 
 ---
 
@@ -1235,8 +1255,7 @@ $ icpc –openmp
 
 ## MPI
 
-- 青山幸也 著, MPI 虎の巻, https://www.hpci-office.jp/invite2/documents2/HPC_Programming_Seminar/mpi-all_20160801_20181206.pdf
-- P.パチェコ 著, MPI 並列プログラミング ISBN-13: 978-4563015442
+- 青山幸也 著, MPI 虎の巻, https://www.hpci-office.jp/events/seminars/seminar_texts
 - 片桐孝洋 著, スパコンプログラミング入門: 並列処理と MPI の学習 ISBN-13: 978-4130624534
 
 ## OpenMP
