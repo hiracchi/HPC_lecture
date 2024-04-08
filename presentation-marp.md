@@ -12,7 +12,7 @@ paginate: true
 
 ## 2023/04/18
 
-本資料は marp(https://marp.app/)で作成されています。
+本資料は marp(<https://marp.app/>)で作成されています。
 
 ---
 
@@ -62,8 +62,8 @@ paginate: true
 
 - 最新情報・ヒントは wiki を参照すること
   See the wiki for the last information and hints.
-  - https://gitlab.com/ut-sdpss/2023/lecture/-/wikis/基礎演習課題
-  - https://gitlab.com/ut-sdpss/2023/lecture/-/wikis/BasicExercise
+  - <https://gitlab.com/ut-sdpss/2023/lecture/-/wikis/基礎演習課題>
+  - <https://gitlab.com/ut-sdpss/2023/lecture/-/wikis/BasicExercise>
 
 ---
 
@@ -113,15 +113,15 @@ paginate: true
 
 ---
 
-# Oakbridge-CX system @UT
+# Wisteria system @UT
 
-- https://www.cc.u-tokyo.ac.jp/supercomputer/obcx/service/
+- <https://www.cc.u-tokyo.ac.jp/supercomputer/wisteria/service/index.php>
 
-![width:15cm drop-shadow center](./img/obcx_intro.png)
+![width:15cm drop-shadow center](./img/wisteria_intro.png)
 
 ---
 
-# Top500 (http://top500.org/) (1/2)
+# Top500 (<http://top500.org/>) (1/2)
 
     R_peak: 理論性能値(theorotical maximum performance; calculated)
     R_max: 実効性能値(determine by HPL benchmark)
@@ -138,8 +138,8 @@ paginate: true
 
 # Linux がスパコン TOP500 で OS シェア 100％に
 
-- https://www.zdnet.com/article/linux-totally-dominates-supercomputers/
-- https://japan.zdnet.com/article/35110755/
+- <https://www.zdnet.com/article/linux-totally-dominates-supercomputers/>
+- <https://japan.zdnet.com/article/35110755/>
 
 ![bg right:60%](./TOP500_201711_linux.png)
 
@@ -221,7 +221,7 @@ paginate: true
 | Core i7(Broadwell)    | 480 GFLOPS | 2014; 16 F/C × 3.0 GHz × 10 |
 | Apple M1              | 2.6 TFLOPS | 2020                        |
 
-- https://dench.flatlib.jp/opengl/cpuflops
+- <https://dench.flatlib.jp/opengl/cpuflops>
 
 ---
 
@@ -240,8 +240,8 @@ paginate: true
 | AMD Radeon RX 6600      | SP(FP32): 8.928 TFLOPS |      |
 |                         | DP(FP64): 558.0 GFLOPS | 1:16 |
 
-- https://www.techpowerup.com/gpu-specs/
-- https://dench.flatlib.jp/opengl/gpuflops
+- <https://www.techpowerup.com/gpu-specs/>
+- <https://dench.flatlib.jp/opengl/gpuflops>
 
 ---
 
@@ -308,7 +308,7 @@ paginate: true
 | (メイン)メモリ memory      |  MG ~ GB |             100 ns |        3~ GB/s |
 | ハードディスク HDD         |  GB ~ TB |              10 ms |       100 MB/s |
 
-cf.) https://colin-scott.github.io/personal_website/research/interactive_latency.html
+cf.) <https://colin-scott.github.io/personal_website/research/interactive_latency.html>
 
 - キャッシュを効率的に使わないと遅い
   It is slow if you do not use cash efficiently
@@ -356,7 +356,7 @@ cf.) https://colin-scott.github.io/personal_website/research/interactive_latency
 # なぜ並列化が必要なのか
 
 - “The Free Lunch Is Over”
-  - http://www.gotw.ca/publications/concurrency-ddj.htm
+  - <http://www.gotw.ca/publications/concurrency-ddj.htm>
 
 ![width:12cm](./CPU.png)
 
@@ -460,7 +460,7 @@ $$
 
 ---
 
-# 並列化は万能か?!
+# 並列化は万能か&quest;&excl;
 
 - Processing that becomes faster by parallelization / that does not get faster
 - "並列化出来る処理"と"頑張っても並列化できない処理"とがある
@@ -495,8 +495,6 @@ How to use the excel sheets in the basic excercise
   The calculation is done automatically by assigning values to the light blue cells, but you may change this if necessary.
 - シートは2枚(Strong scaling, Weak Scaling)あるので、忘れないようにしてください。
   There are two sheets (Strong Scaling, Weak Scaling), so please do not forget them.
-
-
 
 ---
 
@@ -594,14 +592,14 @@ How to use the excel sheets in the basic excercise
 
 # MPI 関数の性質 Characters
 
-### 通信 Communication
+## 通信 Communication
 
 - 集団通信 Collective communication
   - 全プロセスが通信に参加 (全プロセスが呼ばなければ止まる)
 - 1 対 1 通信
   - 通信に関与するプロセスのみが関数を呼ぶ
 
-### Blocking / non-Blocking
+## Blocking / non-Blocking
 
 - Blocking
   - 通信が完了するまで次の処理を待つ
@@ -616,14 +614,14 @@ How to use the excel sheets in the basic excercise
 
 ## MPI_Init
 
-```
+```c++
 #include <mpi.h>
 int MPI_Init(int *argc, char **argv);
 ```
 
 - MPI 環境を起動・初期化する
 
-```
+```text
     argc: コマンドライン引数の総数
     argv: 引数の文字列を指すポインタ配列
 ```
@@ -636,7 +634,7 @@ int MPI_Init(int *argc, char **argv);
 
 ## MPI_Finalize
 
-```
+```c++
 #include <mpi.h>
 int MPI_Finalize();
 ```
@@ -649,7 +647,7 @@ int MPI_Finalize();
 
 ## MPI_Comm_size
 
-```
+```c++
 #include <mpi.h>
 int MPI_Comm_size(MPI_Comm comm, int *size);
 ```
@@ -657,7 +655,7 @@ int MPI_Comm_size(MPI_Comm comm, int *size);
 - コミュニケータに含まれる全プロセスの数を返す
 - コミュニケータには全 MPI プロセスを表す定義済みコミュニケータ`MPI_COMM_WORLD`が使用できる
 
-```
+```text
     comm: (in) コミュニケータ
     size: (out) プロセスの総数
 ```
@@ -670,7 +668,7 @@ int MPI_Comm_size(MPI_Comm comm, int *size);
 
 ## MPI_Comm_rank
 
-```
+```c++
 #include <mpi.h>
 int MPI_Comm_rank(MPI_Comm comm, int *rank);
 ```
@@ -678,7 +676,7 @@ int MPI_Comm_rank(MPI_Comm comm, int *rank);
 - コミュニケータ内の自身のプロセスランクを返す
   - ランクは 0 から始まる
 
-```
+```text
     comm: (in) コミュニケータ
     rank: (out) ランク
 ```
@@ -691,7 +689,7 @@ int MPI_Comm_rank(MPI_Comm comm, int *rank);
 
 ## MPI_Bcast
 
-```
+```c++
 #include <mpi.h>
 int MPI_Bcast(void* buf, int count, MPI_Datatype datatype,
 int root, MPI_Comm comm);
@@ -699,7 +697,7 @@ int root, MPI_Comm comm);
 
 - root から comm の全プロセスに対して broadcast する
 
-```
+```text
     buf: (in)  送信バッファのアドレス
     count: (in) 送信する数
     datatype: (in) データ型
@@ -715,7 +713,7 @@ int root, MPI_Comm comm);
 
 ## MPI_Allreduce
 
-```
+```c++
 #include <mpi.h>
 
 int MPI_Allreduce(void* sendbuf, void* recvbuf, int count,
@@ -724,7 +722,7 @@ MPI_Datatype datatype, MPI_Op op, MPI_Comm comm);
 
 - 集計した後、結果を全プロセスへ送信する
 
-```
+```text
     sendbuf: (in) 送信バッファのアドレス
     recvbuf: (out) 受信バッファのアドレス
     count: (in) 送信する数
@@ -741,7 +739,7 @@ MPI_Datatype datatype, MPI_Op op, MPI_Comm comm);
 
 ## MPI_Send
 
-```
+```c++
 #include <mpi.h>
 
 int MPI_Send(void* buf, int count, MPI_Datatype datatype,
@@ -750,7 +748,7 @@ int dest, int tag, MPI_Comm comm);
 
 - dest プロセスへデータを送る
 
-```
+```text
     buf: (in) 送信バッファのアドレス
     count: (in) 送信する数
     datatype: (in) データ型
@@ -767,7 +765,7 @@ int dest, int tag, MPI_Comm comm);
 
 ## MPI_Recv
 
-```
+```c++
 #include <mpi.h>
 
 int MPI_Recv(void* buf, int count, MPI_Datatype datatype,
@@ -776,7 +774,7 @@ int source, int tag, MPI_Comm comm, MPI_Status* status);
 
 - source プロセスからのデータを受け取る
 
-```
+```text
     buf: (out) 受信バッファのアドレス
     count: (in) 受信する数
     datatype: (in) データ型
@@ -793,7 +791,7 @@ int source, int tag, MPI_Comm comm, MPI_Status* status);
 
 ## MPI_Isend
 
-```
+```c++
 #include <mpi.h>
 
 int MPI_Isend(void* buf, int count, MPI_Datatype datatype,
@@ -802,7 +800,7 @@ int dest, int tag, MPI_Comm comm, MPI_Request* request);
 
 - dest プロセスへデータを送る
 
-```
+```text
     buf: (in) 送信バッファのアドレス
     count: (in) 送信する数
     datatype: (in) データ型
@@ -817,9 +815,9 @@ int dest, int tag, MPI_Comm comm, MPI_Request* request);
 
 # 主な MPI 関数 (単体通信: 4/4)
 
-### MPI_Irecv
+## MPI_Irecv
 
-```
+```c++
 #include <mpi.h>
 
 int MPI_Recv(void* buf, int count, MPI_Datatype datatype,
@@ -828,7 +826,7 @@ int source, int tag, MPI_Comm comm, MPI_Request* request);
 
 - source プロセスからのデータを受け取る
 
-```
+```text
     buf: (out) 受信バッファのアドレス
     count: (in) 受信する数
     datatype: (in) データ型
@@ -844,7 +842,7 @@ int source, int tag, MPI_Comm comm, MPI_Request* request);
 
 ## MPI_Barrier
 
-```
+```c++
 #include <mpi.h>
 
 int MPI_Barrier(MPI_Comm comm);
@@ -852,8 +850,8 @@ int MPI_Barrier(MPI_Comm comm);
 
 - 同期をとる
 
-```
-    comm: (in) コミュニケータ
+```text
+comm: (in) コミュニケータ
 ```
 
 ---
@@ -862,7 +860,7 @@ int MPI_Barrier(MPI_Comm comm);
 
 ## MPI_Wait
 
-```
+```c++
 #include <mpi.h>
 
 int MPI_Wait(MPI_Request* request, MPI_Status* status);
@@ -870,7 +868,7 @@ int MPI_Wait(MPI_Request* request, MPI_Status* status);
 
 - 変数の通信待ち処理を行う
 
-```
+```text
     request: (in) リクエストハンドル
     status: (out) 受信状態
 ```
@@ -881,7 +879,7 @@ int MPI_Wait(MPI_Request* request, MPI_Status* status);
 
 ## MPI_Wtime
 
-```
+```c++
 #include <mpi.h>
 
 double MPI_Wtime();
@@ -905,7 +903,7 @@ double MPI_Wtime();
 
 # MPI サンプルコード(1/2)
 
-```
+```c++
 #include <iostream>
 #include <unistd.h>
 #include <mpi.h>
@@ -924,7 +922,7 @@ int main(int argc, char *argv[])
 
 # MPI サンプルコード(2/2)
 
-```
+```c++
     char hostname[256];
     for (int i = 0; i < size; ++i) {
         if (i == rank) {
@@ -1013,7 +1011,7 @@ int main(int argc, char *argv[])
 
 - 並列実行
 
-```
+```c++
 #pragma omp parallel
 {
 …
@@ -1022,7 +1020,7 @@ int main(int argc, char *argv[])
 
 - 並列実行(for ループ)
 
-```
+```c++
 #pragma omp parallel for
 for (int i = 0; i < 10; ++i) {
 …
@@ -1037,7 +1035,7 @@ for (int i = 0; i < 10; ++i) {
 
 # OpenMP サンプル(1/2)
 
-```
+```c++
 #include <iostream>
 #include <omp.h>
 
@@ -1057,7 +1055,7 @@ int main()
 
 # OpenMP サンプル(2/2)
 
-```
+```c++
     int sum = 0;
 #pragma omp parallel for
     for (int i = 0; i < 10000; ++i) {
@@ -1079,7 +1077,7 @@ int main()
 
 ## ブロックを並列化
 
-```
+```c++
 #pragma omp parallel
 {
 ...
@@ -1092,7 +1090,7 @@ int main()
 
 ## for ループを並列化 (for を分割処理)
 
-```
+```c++
 #pragma omp parallel
 {
 #pragma omp for
@@ -1104,7 +1102,7 @@ int main()
 
 ## for ループを並列化 (parallel と一緒に指定)
 
-```
+```c++
 #pragma omp parallel for
 for (int i = 0; i < 100; ++i) {
 ...
@@ -1117,7 +1115,7 @@ for (int i = 0; i < 100; ++i) {
 
 ## section を並行に実行
 
-```
+```c++
 #pragma omp parallel sections
 {
 #pragma omp section
@@ -1138,7 +1136,7 @@ for (int i = 0; i < 100; ++i) {
 
 ## 1 つのスレッドだけが実行
 
-```
+```c++
 #pragma omp parallel
 {
 #pragma omp single
@@ -1154,7 +1152,7 @@ for (int i = 0; i < 100; ++i) {
 
 ## 直後のブロックを排他的に処理
 
-```
+```c++
 #pragma omp parallel
 {
 #pragma omp critical
@@ -1170,7 +1168,7 @@ for (int i = 0; i < 100; ++i) {
 
 ## スレッドの同期を取る
 
-```
+```c++
 #pragma omp parallel
 {
 #pragma omp barrier
@@ -1184,7 +1182,7 @@ for (int i = 0; i < 100; ++i) {
 
 ## 共有変数のメモリの一貫性を保つ
 
-```
+```c++
 #pragma omp parallel
 {
 #pragma omp flush
@@ -1197,7 +1195,7 @@ for (int i = 0; i < 100; ++i) {
 
 - don't forget include <omp.h>
 
-```
+```c++
 #include <omp.h>
 ```
 
@@ -1218,13 +1216,13 @@ for (int i = 0; i < 100; ++i) {
 - gnu compiler
 
 ```bash
-$ gcc -fopenmp
+gcc -fopenmp
 ```
 
 - intel compiler
 
 ```bash
-$ icpc –openmp
+icpc –openmp
 ```
 
 - 共有変数か private 変数かを意識すること
@@ -1250,18 +1248,17 @@ $ icpc –openmp
 - ノード内メモリをプロセスが占有できる
 - 2 種類の並列コードを書かないといけない
 
-___
+---
 
 # 最近の話題(Recent Topics)
 
 ## CPU affinity
+
 - OMP_PLACES
 - OMP_PROC_BIND
 - GOMP_CPU_AFFINITY
 - KMP_AFFINITY
 - mpiexec --report-bindings
-
-
 
 ---
 
@@ -1269,14 +1266,14 @@ ___
 
 ## MPI
 
-- 青山幸也 著, MPI 虎の巻, https://www.hpci-office.jp/events/seminars/seminar_texts
+- 青山幸也 著, MPI 虎の巻, <https://www.hpci-office.jp/events/seminars/seminar_texts>
 - 片桐孝洋 著, スパコンプログラミング入門: 並列処理と MPI の学習 ISBN-13: 978-4130624534
 
 ## OpenMP
 
-- OpenMP 入門 http://www.isus.jp/article/openmp-special/getting-started-with-openmp/
+- OpenMP 入門 <http://www.isus.jp/article/openmp-special/getting-started-with-openmp/>
 - 北山 洋幸 著, OpenMP 入門―マルチコア CPU 時代の並列プログラミング ISBN-13: 978-4798023434
-- https://www.openmp.org/wp-content/uploads/OpenMPRef-5.2-1121-JA.pdf
+- <https://www.openmp.org/wp-content/uploads/OpenMPRef-5.2-1121-JA.pdf>
 
 ---
 
@@ -1290,7 +1287,7 @@ ___
 - open a terminal
 - login to the super-computer system by using ssh
 
-* 2 つのアカウント (ECCS とスパコン) の違いに注意! (iMac@電子計算機室)
+2 つのアカウント (ECCS とスパコン) の違いに注意! (iMac@電子計算機室)
 
 ---
 
@@ -1304,7 +1301,7 @@ ___
 
 ![width:15cm](./ssh-connection.png)
 
-- https://qiita.com/tag1216/items/5d06bad7468f731f590e
+- <https://qiita.com/tag1216/items/5d06bad7468f731f590e>
 
 ---
 
@@ -1314,16 +1311,16 @@ ___
 
 - 秘密鍵・公開鍵ともにテキストファイル
   Both private and public keys are in text file format.
-  - https://qiita.com/ponsuke0531/items/7b34347213660c80bc95
+  - <https://qiita.com/ponsuke0531/items/7b34347213660c80bc95>
 - public key in OpenSSH format
 
-```
+```text
 ssh-rsa AAAA...
 ```
 
 - private key in OpenSSH format
 
-```
+```text
 -----BEGIN RSA PRIVATE KEY-----
 ...
 -----END RSA PRIVATE KEY-----
@@ -1366,7 +1363,7 @@ Be careful to overwrite files!
 
 ホスト毎の鍵の管理や多段接続、ポート転送が簡単に使えるようになる。
 
-- https://qiita.com/passol78/items/2ad123e39efeb1a5286b
+- <https://qiita.com/passol78/items/2ad123e39efeb1a5286b>
 
 ---
 
@@ -1376,7 +1373,7 @@ Be careful to overwrite files!
 - run ssh-keygen
 
 ```bash
-$ ssh-keygen -t rsa
+ssh-keygen -t rsa
 ```
 
 - created files
@@ -1393,27 +1390,27 @@ $ ssh-keygen -t rsa
 
 ## Windows
 
-- putty: https://ice.hotmint.com/putty/index.html
-- RLogin: http://nanno.dip.jp/softlib/man/rlogin/
-- TeraTerm: http://ttssh2.osdn.jp
+- putty: <https://ice.hotmint.com/putty/index.html>
+- RLogin: <http://nanno.dip.jp/softlib/man/rlogin/>
+- TeraTerm: <http://ttssh2.osdn.jp>
 - WSL2 (Windows Subsystem for Linux) + Windows Terminal
-  - https://dev.classmethod.jp/articles/linux-beginner-wsl2-windowsterminal-setup/
+  - <https://dev.classmethod.jp/articles/linux-beginner-wsl2-windowsterminal-setup/>
 
 ## MacOS
 
 - OS 添付のターミナル(Application/Utility/Termina.app)
-- iTerm2: https://www.iterm2.com
+- iTerm2: <https://www.iterm2.com>
 
 ---
 
 # making ssh-key (Windows)
 
-- cf.) https://www.xlsoft.com/jp/blog/blog/2019/07/25/post-6946/
+- cf.) <https://www.xlsoft.com/jp/blog/blog/2019/07/25/post-6946/>
 - ターミナルソフトとして putty や RLogin などを用意
-  - putty: https://ice.hotmint.com/putty/index.html
-  - RLogin: http://nanno.dip.jp/softlib/man/rlogin/
+  - putty: <https://ice.hotmint.com/putty/index.html>
+  - RLogin: <http://nanno.dip.jp/softlib/man/rlogin/>
 - putty の場合
-  - puttygen を利用 (https://ja.osdn.net/projects/winscp/wiki/ui_puttygen)
+  - puttygen を利用 (<https://ja.osdn.net/projects/winscp/wiki/ui_puttygen>)
 
 ---
 
@@ -1476,9 +1473,9 @@ zip ファイルを展開して、任意の場所にコピー(または移動)�
 
 ## 鍵を保存します
 
-### [公開鍵の保存]をクリックして、公開鍵を好きな名前(例えば id_rsa.pub)で保存します。
+### [公開鍵の保存]をクリックして、公開鍵を好きな名前(例えば id_rsa.pub)で保存します
 
-### [秘密鍵の保存] をクリックして、秘密鍵を好きな名前(例えば id_rsa)で保存します。
+### [秘密鍵の保存] をクリックして、秘密鍵を好きな名前(例えば id_rsa)で保存します
 
 - 秘密鍵を保存しておけば、後でペアとなる公開鍵を再作成することもできます。
 
@@ -1493,7 +1490,7 @@ putty の秘密鍵は特殊フォーマット(.ppk)で保存されます。そ�
 
 zip ファイルを入手します。
 
-- RLogin: http://nanno.dip.jp/softlib/man/rlogin/
+- RLogin: <http://nanno.dip.jp/softlib/man/rlogin/>
 
 ## インストール
 
@@ -1582,7 +1579,7 @@ zip ファイルを展開して、任意の場所にコピー(または移動)�
 - procedure
   - open your web browser
   - open the following URL
-    - 利用支援ポータル (https://obcx-www.cc.u-tokyo.ac.jp/)
+    - 利用支援ポータル (<https://wisteria-www.cc.u-tokyo.ac.jp/>)
   - submit your account (利用者番号) and password
   - change password
     - DO NOT close the browser before you can log-in the portal site by using another browser.
@@ -1612,7 +1609,7 @@ zip ファイルを展開して、任意の場所にコピー(または移動)�
 - type in your terminal
 
 ```bash
-$ ssh <supercomputer account>@obcx.cc.u-tokyo.ac.jp
+ssh <supercomputer account>@obcx.cc.u-tokyo.ac.jp
 ```
 
 - パスフレーズが聞かれた場合は、設定したパスフレーズを入れる
@@ -1623,7 +1620,7 @@ $ ssh <supercomputer account>@obcx.cc.u-tokyo.ac.jp
 # transmit files (scp 1/2)
 
 ```bash
-$ scp <from> <to>
+scp <from> <to>
 ```
 
 - cp コマンドと同様の使い方 (第４文型: SVOO)
@@ -1639,14 +1636,14 @@ $ scp <from> <to>
 
 - from local machie to remote
 
-```
-$ scp ./sample.c  xxxx@obcx.cc.u-tokyo.ac.jp:somewhere
+```bash
+scp ./sample.c  xxxx@obcx.cc.u-tokyo.ac.jp:somewhere
 ```
 
 - from remote machine to local
 
-```
-$ scp xxxx@obcx.cc.u-tokyo.ac.jp:sample.c ./somewhere
+```bash
+scp xxxx@obcx.cc.u-tokyo.ac.jp:sample.c ./somewhere
 ```
 
 ---
@@ -1668,7 +1665,7 @@ $ scp xxxx@obcx.cc.u-tokyo.ac.jp:sample.c ./somewhere
 
 # How to use the batch system
 
-see users guide in https://obcx-www.cc.u-tokyo.ac.jp/
+see users guide in <https://obcx-www.cc.u-tokyo.ac.jp/>
 
 - available queue
   - lecture2 (in the class)
