@@ -1,6 +1,9 @@
 ---
-marp: false
-theme: beamer
+marp: true
+# theme: default
+# theme: beamer
+theme: my-theme
+# math: katex
 paginate: true
 ---
 
@@ -10,7 +13,7 @@ paginate: true
 
 ## `t-hirano [at] iis.u-tokyo.ac.jp`
 
-## 2023/04/18
+## 2024/04/16
 
 本資料は marp(<https://marp.app/>)で作成されています。
 
@@ -121,18 +124,13 @@ paginate: true
 
 ---
 
-# Top500 (<http://top500.org/>) (1/2)
+# Top500 (<http://top500.org/>)
 
     R_peak: 理論性能値(theorotical maximum performance; calculated)
     R_max: 実効性能値(determine by HPL benchmark)
 
-![width:17cm drop-shadow center](./img/TOP500_202211_1.png)
+![width:13cm drop-shadow center](./img/TOP500_202311_1.png)
 
----
-
-# Top500 (2/2)
-
-![width:22cm drop-shadow center](./img/TOP500_202211_2.png)
 
 ---
 
@@ -234,11 +232,15 @@ paginate: true
 | 名称                    |                        | 備考 |
 | :---------------------- | :--------------------- | ---- |
 | NVIDIA GeForce RTX 3090 | SP(FP32): 35.58 TFLOPS |      |
-|                         | DP(FP64): 556.0 GFLOPS | 1:16 |
-| NVIDIA A100             | SP(FP32): 19.49 TFLOPS |      |
-|                         | DP(FP64): 9.746 TFLOPS | 1:2  |
-| AMD Radeon RX 6600      | SP(FP32): 8.928 TFLOPS |      |
-|                         | DP(FP64): 558.0 GFLOPS | 1:16 |
+|                         | DP(FP64): 556.0 GFLOPS | 1:64 |
+| NVIDIA GeForce RTX 4090 | SP(FP32): 82.58 TFLOPS |      |
+|                         | DP(FP64): 1.295 TFLOPS | 1:64 |
+| NVIDIA H100             | SP(FP32): 62.08 TFLOPS |      |
+|                         | DP(FP64): 31.04 TFLOPS | 1:2  |
+| AMD Radeon RX 7700XT    | SP(FP32): 35.17 TFLOPS |      |
+|                         | DP(FP64): 1.009 TFLOPS | 1:32 |
+| AMD Radeon MI300X       | SP(FP32): 81.72 TFLOPS |      |
+|                         | DP(FP64): 81.72 TFLOPS | 1:1  |
 
 - <https://www.techpowerup.com/gpu-specs/>
 - <https://dench.flatlib.jp/opengl/gpuflops>
@@ -247,15 +249,16 @@ paginate: true
 
 # 様々なハードの浮動小数点演算能力
 
-| 名称             |              | 備考    |
-| :--------------- | -----------: | ------- |
-| Apple A8         |   115 GFLOPS | iPhone6 |
-| PS4              |  1.84 TFLOPS |         |
-| PS5              | 10.28 TFLOPS |         |
-| 地球シミュレータ | 35.86 TFLOPS | 初代    |
-| 京               | 10.51 PFLOPS |         |
-| Summit           | 143.5 PFLOPS |         |
-| 富岳             |   415 PFLOPS |         |
+| 名称             |                | 備考    |
+| :--------------- | -------------: | ------- |
+| Apple A8         |   115 GFLOPS   | iPhone6     |
+| Apple A17pro     |   2.1 TFLOPS   | iPhone15pro |
+| PS4              |  1.84 TFLOPS   |         |
+| PS5              | 10.28 TFLOPS   |         |
+| 地球シミュレータ | 35.86 TFLOPS   | 初代    |
+| 京               | 10.51 PFLOPS   |         |
+| 富岳             |   442 PFLOPS   |         |
+| Frontier         | 1.194 ExaFLOPS |         |
 
 ---
 
@@ -268,8 +271,8 @@ paginate: true
     - iMac (Intel Core i5-5575R, DDR3)
       - 1867 MHz x 8 x 2 = 29872 MB/s = 29.9 GB/s
     - Reedbush 1node (DDR4-2400) 153.6 GB/s
-    - Oakbridge-CX 1node 281.6 GB/s
-      - 計算ノード間: 100 Gbps = (100/8) GB/s = 12.5 GB/s
+    - Wisteria-O 1node 1024 GB/s
+      - 計算ノード間: 40.8 GB/s
 - 単純な計算を大量に行う場合は、メモリバンド幅が性能を決める
   When performing simple calculations in large quantities, the memory bandwidth determines the performance.
 
@@ -281,10 +284,13 @@ paginate: true
   - SR16000: 512 GB/s / 980.48 GFLOPS = 0.52
   - FX10: 85 GB/s / 236.5 GFLOPS = 0.36
   - Reedbush: 153.6 GB/s / (2.1x16x36) GFLOPS = 0.127
-  - Oakbridge-CX: 281.6 GB/s / 4.8384 (=2.7 _ 56 _ 32) TFLOPS = 0.05820
+  - Wisteria-O: 1024 GB/s / 3.3792 TFLOPS = 0.30
 - 参考
   - 倍精度実数(double)は 8 octet(byte):  
-    3 度の読み書き(e.g. c=a\*b)で 8 x 3 = 24 octet(byte) - B/F 値 24 以上必要 - FX10: 0.36 / 24 = 0.015 (98.5% CPU は遊んでる) - Reedbush: 0.127 / 24 = 0.0053 (99.5% CPU は遊んでる!) - Oakbridge-CX: 0.05820 / 24 = 0.002425 (99.76% CPU は遊んでる!)
+    3回の読み書き(e.g. c=a\*b)で 8 x 3 = 24 octet(byte) → B/F 値 24 以上必要 
+    - FX10: 0.36 / 24 = 0.015 (98.5% CPU は遊んでる) 
+    - Reedbush: 0.127 / 24 = 0.0053 (99.5% CPU は遊んでる!) 
+    - Wisteria-O: 0.3 / 24 = 0.0125 (98.75% CPU は遊んでる!)
 - CPU さえ速ければ、コア数さえ多ければ、単純に速いわけではない！
 
 ---
@@ -372,14 +378,6 @@ cf.) <https://colin-scott.github.io/personal_website/research/interactive_latenc
    Only have to use multiple CPUs
 1. 並列処理のプログラムを書かねばパフォーマンスが上がらず
    Performance does not rise unless you write a parallel processing program!
-
----
-
-![auto center](./img/pokemon-cpu.jpg)
-
----
-
-![auto center](./img/dospara-cpu.jpg)
 
 ---
 
@@ -473,15 +471,15 @@ $$
 
 ## Strong Scaling
 
-- 問題規模は一定
-- プロセス数を増加
+- 同じ問題をどれだけ早く計算できるか
+- 問題規模は一定で、プロセス数を増加させて計測
 - 並列数が多くなると達成は困難
   - cf. アムダールの法則
 
 ## Weak Scaling
 
-- 1 プロセスあたりの問題規模を一定
-- プロセス数を増加
+- 同じ時間でどれだけ大きな問題を計算できるか
+- 1プロセスあたりの問題規模を一定に、プロセス数を増加させて計測
 
 ![bg right:30% width:100%](./scalability.png)
 
@@ -509,7 +507,7 @@ How to use the excel sheets in the basic excercise
   - 実行単位; execution unit
   - 各スレッドはプロセス内メモリを共有する
     Each thread shares the process memory
-- see
+- 観察方法
   - Task Manager (@Windows)
   - Activity Monitor(@MacOS), top/htop (@Mac, UNIX)
 
@@ -1574,7 +1572,7 @@ zip ファイルを展開して、任意の場所にコピー(または移動)�
 
 ---
 
-# register the public ssh key (Oakbridge) (1/2)
+# register the public ssh key (@Wisteria) (1/2)
 
 - procedure
   - open your web browser
@@ -1589,7 +1587,7 @@ zip ファイルを展開して、任意の場所にコピー(または移動)�
 
 ---
 
-# register the public ssh key (Oakbridge) (2/2)
+# register the public ssh key (@Wisteria) (2/2)
 
 - procedure (continued)
 
@@ -1600,7 +1598,7 @@ zip ファイルを展開して、任意の場所にコピー(または移動)�
       ssh でのログインが確認できるまでブラウザを閉じないこと
 
 - manual
-  - [利用支援ポータル] -> [ドキュメント閲覧] -> [Oakbridge-CX 利用手引書]
+  - [利用支援ポータル] -> [ドキュメント閲覧] -> [Wisteria 利用手引書]
 
 ---
 
@@ -1609,7 +1607,7 @@ zip ファイルを展開して、任意の場所にコピー(または移動)�
 - type in your terminal
 
 ```bash
-ssh <supercomputer account>@obcx.cc.u-tokyo.ac.jp
+ssh <supercomputer account>@wisteria.cc.u-tokyo.ac.jp
 ```
 
 - パスフレーズが聞かれた場合は、設定したパスフレーズを入れる
@@ -1637,13 +1635,13 @@ scp <from> <to>
 - from local machie to remote
 
 ```bash
-scp ./sample.c  xxxx@obcx.cc.u-tokyo.ac.jp:somewhere
+scp ./sample.c  xxxx@wisteria.cc.u-tokyo.ac.jp:somewhere
 ```
 
 - from remote machine to local
 
 ```bash
-scp xxxx@obcx.cc.u-tokyo.ac.jp:sample.c ./somewhere
+scp xxxx@wisteria.cc.u-tokyo.ac.jp:sample.c ./somewhere
 ```
 
 ---
@@ -1654,10 +1652,12 @@ scp xxxx@obcx.cc.u-tokyo.ac.jp:sample.c ./somewhere
 
 - FileZilla (無償)
 - WinSCP (無償)
+- Cyberduck (無償)
 
 ## MacOS
 
 - FileZilla (無償)
+- Cyberduck (無償)
 - Transmit (有償)
 - Forklift (有償)
 
@@ -1665,11 +1665,11 @@ scp xxxx@obcx.cc.u-tokyo.ac.jp:sample.c ./somewhere
 
 # How to use the batch system
 
-see users guide in <https://obcx-www.cc.u-tokyo.ac.jp/>
+see users guide in <https://wisteria-www.cc.u-tokyo.ac.jp/>
 
 - available queue
-  - lecture2 (in the class)
-  - lecture (outside of the class)
+  - lecture6-o (in the class)
+  - lecture-o (outside of the class)
 
 |                               | command          |
 | ----------------------------- | ---------------- |
